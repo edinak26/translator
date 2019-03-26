@@ -8,7 +8,7 @@ public class LexicalAnalyzer {
 
 
     public LexicalAnalyzer() throws Exception{
-        code = new CodeText((new TextReader()).getText());
+        code = new CodeText(TextReader.code().setPath("path").get());
         //CodeReader.getText()
     }
     public void analyse(){

@@ -1,6 +1,5 @@
 package phoenix;
 
-import phoenix.general.model.lexical.analyzer.CodeReader;
 import phoenix.general.model.Model;
 import phoenix.general.model.lexical.analyzer.LexicalAnalyzer;
 import phoenix.general.view.View;

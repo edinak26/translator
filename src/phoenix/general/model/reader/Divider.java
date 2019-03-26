@@ -15,8 +15,10 @@ public abstract class Divider {
 
     public List<List<String>> splitText(final List<String> text) {
         splitText = new ArrayList<>();
+        System.out.println(text);
         for (String line : text) {
             curLine = line;
+            addEnd();
             selectSimpleSeparators();
             selectRegexSeparators();
             saveLine();
@@ -32,8 +34,8 @@ public abstract class Divider {
 
     private void selectRegexSeparators() {
         for (String[] regexSeparator : regexSeparators) {
-            System.out.println(regexSeparator[0]);
             curLine = curLine.replaceAll(regexSeparator[0], regexSeparator[1]);
+
         }
     }
 
@@ -42,7 +44,6 @@ public abstract class Divider {
     }
 
     private void saveLine(){
-        addEnd();
         splitText.add(Arrays.asList(curLine.split(selector)));
     }
 }

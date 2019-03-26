@@ -13,19 +13,29 @@ public class TextReader {
     private Divider divider;
 
     public static String DEFAULT_CODE_PATH = "D:\\University\\Java\\translator\\src\\phoenix\\accessory\\info\\code";
+    public static String DEFAULT_GRAMMAR_PATH = "D:\\University\\Java\\translator\\src\\phoenix\\accessory\\info\\grammar";
 
-    public TextReader(){
-        this.divider = new CodeDivider();
-        this.path = DEFAULT_CODE_PATH;
+    public static TextReader code(){
+        TextReader reader = new TextReader();
+        reader.divider = new CodeDivider();
+        reader.path = DEFAULT_CODE_PATH;
+        return reader;
     }
 
-    public List<List<String>> getText() throws Exception {
-        readText(path);
+    public static TextReader grammar(){
+        TextReader reader = new TextReader();
+        reader.divider = new GrammarDivider();
+        reader.path = DEFAULT_GRAMMAR_PATH;
+        return reader;
+    }
+
+    public List<List<String>> get() throws Exception {
+        readText();
         splitText();
         return splitText;
     }
 
-    private void readText(String path) throws Exception {
+    private void readText() throws Exception {
         text=new ArrayList<>();
         FileReader reader = new FileReader(path);
         Scanner scanner = new Scanner(reader);
@@ -39,13 +49,8 @@ public class TextReader {
         splitText = divider.splitText(text);
     }
 
-    public TextReader setPath(String path) {
+    public TextReader setPath(String path){
         this.path = path;
-        return this;
-    }
-
-    public TextReader setDivider(Divider divider) {
-        this.divider = divider;
         return this;
     }
 }

@@ -7,8 +7,9 @@ public interface Characters {
     String VIEW_GRAMMAR_EQUALITY = "≔";
 
     String GRAMMAR_EQUALITY = "::=";
-    String GRAMMAR_OR = "|";
+    String GRAMMAR_OR = "\\|";
 
+    String SELECTOR = "@";
     String SPACE = " ";
     String EMPTY = "";
 }

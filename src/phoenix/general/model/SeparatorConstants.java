@@ -11,8 +11,8 @@ public interface SeparatorConstants {
     String SELECTED_SPACE = " ";
     String REGEX_START = "^ ";
     String SELECTED_START = "";
-    String REGEX_END = " ?$";
-    String SELECTED_END = " \\\\n";
+    String REGEX_END = " $";
+    String SELECTED_END = "";
 
     String REGEX_IDENTIFIER_LEXEME = "^[a-zA-Z_][a-zA-Z0-9_]*$";
     String REGEX_POINTER_LEXEME = "^#[a-zA-Z0-9_]+$";

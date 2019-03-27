@@ -11,9 +11,9 @@ public class GrammarDivider extends Divider implements Characters {
         regexSeparators = new String[][]{
                 {"(<[^<>|]*>)",SELECTOR+"$1"+SELECTOR},
                 {"::=",SELECTOR},
-                {SELECTOR+"+",SELECTOR},
                 {"\\s+",SELECTOR},
                 {"(<[^<>|]*)"+SELECTOR+"([^<>|]*>)","$1"+SPACE+"$2"},
+                {SELECTOR+"+",SELECTOR},
                 {"^@", ""},
                 {"@$", ""},
         };

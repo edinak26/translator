@@ -1,4 +1,4 @@
-package phoenix.general.model.reader;
+package phoenix.general.model.lexical.analyzer.reader;
 
 import phoenix.general.model.SeparatorConstants;
 
@@ -7,6 +7,7 @@ public class CodeDivider extends Divider implements SeparatorConstants {
     public CodeDivider() {
         selector = " ";
         lineEnd = " \\n";
+        splitRegex = selector;
         separators = new String[]{"==", "<=", ">=", "!=", "<<", ">>",
                 "\\+", "\\*", "/", "\\(", "\\)", "\\{", "}", "-", ",", ":"};
         regexSeparators = new String[][]{

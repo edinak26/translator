@@ -1,4 +1,4 @@
-package phoenix.general.model.reader;
+package phoenix.general.model.lexical.analyzer.reader;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,6 +7,7 @@ import java.util.List;
 public abstract class Divider {
     protected String selector;
     protected String lineEnd;
+    protected String splitRegex;
     protected String[] separators;
     protected String[][] regexSeparators;
 
@@ -35,7 +36,6 @@ public abstract class Divider {
     private void selectRegexSeparators() {
         for (String[] regexSeparator : regexSeparators) {
             curLine = curLine.replaceAll(regexSeparator[0], regexSeparator[1]);
-
         }
     }
 
@@ -44,6 +44,7 @@ public abstract class Divider {
     }
 
     private void saveLine(){
-        splitText.add(Arrays.asList(curLine.split(selector)));
+        System.out.println(curLine);
+        splitText.add(Arrays.asList(curLine.split(splitRegex)));
     }
 }

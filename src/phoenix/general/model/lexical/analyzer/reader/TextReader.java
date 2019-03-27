@@ -1,4 +1,4 @@
-package phoenix.general.model.reader;
+package phoenix.general.model.lexical.analyzer.reader;
 
 import java.io.FileReader;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package phoenix.general.model.lexical.analyzer.reader;
+package phoenix.general.model.reader;
 
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -25,6 +25,19 @@ public class TextReader {
     public static TextReader grammar(){
         TextReader reader = new TextReader();
         reader.divider = new GrammarDivider();
+        reader.path = DEFAULT_GRAMMAR_PATH;
+        return reader;
+    }
+
+    public static TextReader regexGrammar(){
+        TextReader reader = new TextReader();
+        reader.divider = new RegexGrammarDivider();
+        reader.path = DEFAULT_GRAMMAR_PATH;
+        return reader;
+    }
+    public static TextReader typesGrammar(){
+        TextReader reader = new TextReader();
+        reader.divider = new TypesGrammarDivider();
         reader.path = DEFAULT_GRAMMAR_PATH;
         return reader;
     }

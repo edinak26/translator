@@ -1,6 +1,6 @@
-package phoenix.general.model.lexical.analyzer.reader;
+package phoenix.general.model.reader;
 
-import phoenix.general.model.SeparatorConstants;
+import phoenix.general.model.lexical.analyzer.SeparatorConstants;
 
 public class CodeDivider extends Divider implements SeparatorConstants {
 
@@ -18,5 +18,8 @@ public class CodeDivider extends Divider implements SeparatorConstants {
                 {REGEX_END, SELECTED_END},
                 {REGEX_SPACE, SELECTED_SPACE}
         };
+        startLine=null;
+        stopLine=null;
+        isStarted=true;
     }
 }

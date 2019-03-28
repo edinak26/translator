@@ -1,4 +1,4 @@
-package phoenix.general.model;
+package phoenix.general.model.lexical.analyzer;
 
 public interface SeparatorConstants {
     String REGEX_EQUAL = "([^=^>^<^!])=([^=])";
@@ -14,15 +14,11 @@ public interface SeparatorConstants {
     String REGEX_END = " $";
     String SELECTED_END = "";
 
-    String REGEX_IDENTIFIER_LEXEME = "^[a-zA-Z_][a-zA-Z0-9_]*$";
-    String REGEX_POINTER_LEXEME = "^#[a-zA-Z0-9_]+$";
-    String REGEX_VAL_TYPE = "int|double|bool";
+    String REGEX_IDENTIFIER = "^[a-zA-Z_][a-zA-Z0-9_]*$";
+    String REGEX_POINTER = "^#[a-zA-Z0-9_]+$";
+    String REGEX_TYPE = "int|double|bool";
     String REGEX_SEPARATOR = "^(\\n|[+*/\\(\\){}=><,#:-]|==|<=|>=|!=|<<|>>|cin|cout|if|then|while|for|to|by|true|false)$";
     String REGEX_CONSTANT =
-            "^-?[1-9][0-9]*\\.[0-9]*$|" +
-                    "^-?0\\.[0-9]*$|" +
-                    "^-?\\.[0-9]+$|" +
-                    "^-?[1-9][0-9]*$|" +
-                    "^-?0$";
+            "^([1-9][0-9]*|0)?\\.[0-9]+$|^[1-9][0-9]*$|^0$";
     String REGEX_MINUS_IS_CONSTANT = "\\+$|\\*$|/$|\\($|\\{$|}$|,$|\\.$|=$";
 }

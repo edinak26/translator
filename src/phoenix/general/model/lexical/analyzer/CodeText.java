@@ -1,6 +1,5 @@
 package phoenix.general.model.lexical.analyzer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CodeText {
@@ -25,6 +24,7 @@ public class CodeText {
     }
 
     public void goToNextLexeme(){
+
         if(hasNextLineLexeme()){
             goToNextLineLexeme();
         }
@@ -36,7 +36,7 @@ public class CodeText {
     public void goToNextLineLexeme() {
         if (!hasNextLineLexeme()) {
             throw new ArrayIndexOutOfBoundsException(
-                    "CodeText out of range lexemes range: " + curLexemeNum + " size: " + getLineLexemesNumber());
+                    "CodeText out of range lexemes range: " + curLexemeNum + " size: " + getLineLexemesSize());
         }
         curLexemeNum++;
     }
@@ -44,29 +44,29 @@ public class CodeText {
     public void goToNextLine() {
         if (!hasNextLine()) {
             throw new ArrayIndexOutOfBoundsException(
-                    "CodeText out of lines range: "+ curLineNum+1 + " size: " + getLinesNumber());
+                    "CodeText out of lines range: "+ curLineNum + " size: " + getLinesSize());
         }
         curLexemeNum = DEFAULT_START_INDEX;
         curLineNum++;
     }
 
     public boolean hasNextLine() {
-        return curLineNum < getLinesNumber()-1;
+        return curLineNum < getLinesSize()-1;
     }
 
     public boolean hasNextLineLexeme() {
-        return curLexemeNum < getLineLexemesNumber()-1;
+        return curLexemeNum < getLineLexemesSize()-1;
     }
 
     public String getLexeme(int lineNum, int lexemeNum) {
         return splitText.get(lineNum).get(lexemeNum);
     }
 
-    public int getLineLexemesNumber(){
+    public int getLineLexemesSize(){
         return splitText.get(curLineNum).size();
     }
 
-    public int getLinesNumber(){
+    public int getLinesSize(){
         return splitText.size();
     }
 
@@ -81,5 +81,4 @@ public class CodeText {
     public int getLexemeNum() {
         return curLexemeNum;
     }
-
 }

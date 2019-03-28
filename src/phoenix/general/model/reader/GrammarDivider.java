@@ -1,4 +1,4 @@
-package phoenix.general.model.lexical.analyzer.reader;
+package phoenix.general.model.reader;
 
 import phoenix.accessory.constant.Characters;
 
@@ -17,5 +17,7 @@ public class GrammarDivider extends Divider implements Characters {
                 {"^@", ""},
                 {"@$", ""},
         };
+        startLine=":grammar:";
+        stopLine=":types:";
     }
 }

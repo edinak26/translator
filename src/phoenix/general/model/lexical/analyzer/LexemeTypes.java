@@ -17,6 +17,7 @@ public class LexemeTypes {
             }
         }
     }
+
     private boolean isType(String lex){
         if(lex.length()<3&&!lex.equals("|"))
             return true;
@@ -31,11 +32,5 @@ public class LexemeTypes {
                 return true;
         }
         return false;
-    }
-
-    public void show(){
-        for(LexemeType lex:types){
-            System.out.println(lex.getIndex()+" "+lex.getName());
-        }
     }
 }

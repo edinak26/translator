@@ -25,21 +25,5 @@ public class LexemesTableElement {
         this.specType = specType;
         return this;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getLineNum() {
-        return lineNum;
-    }
-
-    public int getLineLexNum() {
-        return lineLexNum;
-    }
-
-    public String getSpecType() {
-        return specType;
-    }
 }
 

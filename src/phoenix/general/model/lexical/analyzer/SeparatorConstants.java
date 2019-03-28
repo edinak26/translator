@@ -13,12 +13,4 @@ public interface SeparatorConstants {
     String SELECTED_START = "";
     String REGEX_END = " $";
     String SELECTED_END = "";
-
-    String REGEX_IDENTIFIER = "^[a-zA-Z_][a-zA-Z0-9_]*$";
-    String REGEX_POINTER = "^#[a-zA-Z0-9_]+$";
-    String REGEX_TYPE = "int|double|bool";
-    String REGEX_SEPARATOR = "^(\\n|[+*/\\(\\){}=><,#:-]|==|<=|>=|!=|<<|>>|cin|cout|if|then|while|for|to|by|true|false)$";
-    String REGEX_CONSTANT =
-            "^([1-9][0-9]*|0)?\\.[0-9]+$|^[1-9][0-9]*$|^0$";
-    String REGEX_MINUS_IS_CONSTANT = "\\+$|\\*$|/$|\\($|\\{$|}$|,$|\\.$|=$";
 }

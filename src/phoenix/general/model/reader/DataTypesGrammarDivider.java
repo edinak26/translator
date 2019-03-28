@@ -2,12 +2,12 @@ package phoenix.general.model.reader;
 
 import phoenix.accessory.constant.Characters;
 
-public class TypesGrammarDivider extends Divider implements Characters {
-    TypesGrammarDivider() {
+public class DataTypesGrammarDivider extends Divider implements Characters {
+    DataTypesGrammarDivider() {
         selector = SELECTOR;
         lineEnd = EMPTY;
         splitRegex = SELECTOR;
-        regexSeparators = new String[][]{};
+        regexSeparators = new String[][]{{":;=",SELECTOR}};
         startLine=":types:";
         stopLine=":regex:";
     }

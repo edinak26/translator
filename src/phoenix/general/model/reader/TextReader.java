@@ -35,9 +35,9 @@ public class TextReader {
         reader.path = DEFAULT_GRAMMAR_PATH;
         return reader;
     }
-    public static TextReader typesGrammar(){
+    public static TextReader dataTypesGrammar(){
         TextReader reader = new TextReader();
-        reader.divider = new TypesGrammarDivider();
+        reader.divider = new DataTypesGrammarDivider();
         reader.path = DEFAULT_GRAMMAR_PATH;
         return reader;
     }

@@ -13,6 +13,7 @@ public class GrammarDivider extends Divider implements Characters {
                 {"::=",SELECTOR},
                 {"\\s+",SELECTOR},
                 {"(<[^<>|]*)"+SELECTOR+"([^<>|]*>)","$1"+SPACE+"$2"},
+                {"(<[^<>|]*)"+SELECTOR+"([^<>|]*>)","$1"+SPACE+"$2"},
                 {SELECTOR+"+",SELECTOR},
                 {"^@", ""},
                 {"@$", ""},

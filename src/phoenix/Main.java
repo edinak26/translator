@@ -2,6 +2,8 @@ package phoenix;
 
 import phoenix.general.model.Model;
 import phoenix.general.model.lexical.analyzer.LexicalAnalyzer;
+import phoenix.general.model.reader.TextReader;
+import phoenix.general.model.syntax.analyzer.RelationsTable;
 import phoenix.general.view.View;
 
 public class Main {
@@ -11,6 +13,7 @@ public class Main {
         //Controller controller = new Controller(model,view);
         //controller.run();
         (new LexicalAnalyzer()).analyse();
+        System.out.println((new RelationsTable(TextReader.grammar().get())).getLastPlus("<ініціалізація змінних>").toString());
 
     }
 }

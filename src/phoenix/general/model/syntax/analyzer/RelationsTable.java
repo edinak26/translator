@@ -1,16 +1,43 @@
 package phoenix.general.model.syntax.analyzer;
 
+import phoenix.accessory.constant.Characters;
+
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
-public class RelationsTable {
+public class RelationsTable implements Characters {
     String[][] relations;
     List<List<String>> grammar;
+    List<String> terms;
 
     public RelationsTable(List<List<String>> grammar) {
         this.grammar = grammar;
-        //relations = new ArrayList<>();
+        LinkedHashSet<String> terms = new LinkedHashSet<>();
+        setTerms(terms);
+        this.terms = new ArrayList<>(terms);
+        relations = new String[terms.size()][terms.size()];
+        setRelations();
+        for(String[] line : relations){
+            for(String rel : line){
+                System.out.print(rel+"|");
+            }
+            System.out.println();
+        }
+    }
+
+    private void setTerms(LinkedHashSet<String> terms) {
+        for (List<String> rule : grammar) {
+            terms.add(rule.get(0));
+        }
+        for (List<String> rule : grammar) {
+            for (int i = 1; i < rule.size(); i++) {
+                if (!rule.get(i).equals("|"))
+                    terms.add(rule.get(i));
+            }
+        }
+
     }
 
     public HashSet<String> getFirstPlus(String term) {
@@ -57,5 +84,18 @@ public class RelationsTable {
             }
         }
         return last;
+    }
+
+    private void setRelations(){
+        for(List<String> rule : grammar){
+            for(int i=1;i<rule.size()-1;i++){
+                if(!rule.get(i).equals("|")&&!rule.get(i+1).equals("|"))
+                    setEqualRel(rule.get(i),rule.get(i+1));
+            }
+        }
+    }
+
+    private void setEqualRel(String ter1, String ter2){
+        relations[terms.indexOf(ter1)][terms.indexOf(ter2)]= RELATION_EQUALITY;
     }
 }

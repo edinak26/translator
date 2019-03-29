@@ -13,7 +13,7 @@ public class Main {
         //Controller controller = new Controller(model,view);
         //controller.run();
         (new LexicalAnalyzer()).analyse();
-        System.out.println((new RelationsTable(TextReader.grammar().get())).getLastPlus("<ініціалізація змінних>").toString());
+        new RelationsTable(TextReader.grammar().get());
 
     }
 }

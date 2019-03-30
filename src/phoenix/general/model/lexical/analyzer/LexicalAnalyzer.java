@@ -1,5 +1,6 @@
 package phoenix.general.model.lexical.analyzer;
 
+
 import phoenix.general.model.reader.TextReader;
 
 public class LexicalAnalyzer {

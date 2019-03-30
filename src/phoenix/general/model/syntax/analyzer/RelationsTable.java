@@ -19,9 +19,9 @@ public class RelationsTable implements Characters {
         this.terms = new ArrayList<>(terms);
         relations = new String[terms.size()][terms.size()];
         setRelations();
-        for(String[] line : relations){
-            for(String rel : line){
-                System.out.print(rel+"|");
+        for (String[] line : relations) {
+            for (String rel : line) {
+                System.out.print(rel + "|");
             }
             System.out.println();
         }
@@ -86,16 +86,51 @@ public class RelationsTable implements Characters {
         return last;
     }
 
-    private void setRelations(){
-        for(List<String> rule : grammar){
-            for(int i=1;i<rule.size()-1;i++){
-                if(!rule.get(i).equals("|")&&!rule.get(i+1).equals("|"))
-                    setEqualRel(rule.get(i),rule.get(i+1));
+    private void setRelations() {
+        for (List<String> rule : grammar) {
+            for (int i = 1; i < rule.size() - 1; i++) {
+                if (!rule.get(i).equals("|") && !rule.get(i + 1).equals("|")) {
+                    /*if(rule.get(i).equals("<список змінних>")||rule.get(i+1).equals("<список змінних>")){
+                        System.out.println(rule.get(i)+"|"+rule.get(i+1));
+                        System.out.println(getLastPlus(rule.get(i + 1))+"|\n|"
+                                +getFirstPlus(rule.get(i + 1))
+                        + "||\n||"+getLastPlus(rule.get(i)));
+                    }*/
+                    setEqualRel(rule.get(i), rule.get(i + 1));
+                    setMoreRel(getLastPlus(rule.get(i)), rule.get(i+1));
+                    setLessRel(rule.get(i),getFirstPlus(rule.get(i + 1)));
+                    setMoreRel(getLastPlus(rule.get(i)),getFirstPlus(rule.get(i + 1)));
+                }
             }
         }
     }
 
-    private void setEqualRel(String ter1, String ter2){
-        relations[terms.indexOf(ter1)][terms.indexOf(ter2)]= RELATION_EQUALITY;
+    private void setEqualRel(String ter1, String ter2) {
+        relations[terms.indexOf(ter1)][terms.indexOf(ter2)] = RELATION_EQUALITY;
+    }
+
+    private void setMoreRel(String ter1, String ter2) {
+        relations[terms.indexOf(ter1)][terms.indexOf(ter2)] = RELATION_MORE;
+    }
+
+    private void setMoreRel(HashSet<String> lastPlus, String ter) {
+        for (String term : lastPlus) {
+            setMoreRel(term, ter);
+        }
+    }
+    private void setMoreRel(HashSet<String> lastPlus, HashSet<String> firstPlus) {
+        for (String term : firstPlus) {
+            setMoreRel(lastPlus, term);
+        }
+    }
+
+    private void setLessRel(String ter1, String ter2) {
+        relations[terms.indexOf(ter1)][terms.indexOf(ter2)] = RELATION_LESS;
+    }
+
+    private void setLessRel( String ter, HashSet<String> firstPlus) {
+        for (String term : firstPlus) {
+            setLessRel(ter, term);
+        }
     }
 }

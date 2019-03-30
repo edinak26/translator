@@ -1,5 +1,6 @@
 package phoenix.general.model.reader;
 
+
 import phoenix.accessory.constant.Characters;
 
 public class GrammarDivider extends Divider implements Characters {

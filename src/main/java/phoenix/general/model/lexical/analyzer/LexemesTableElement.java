@@ -6,6 +6,10 @@ public class LexemesTableElement {
     int lineLexNum;
     String specType;
 
+    public LexemesTableElement() {
+        name = "#";
+    }
+
     public LexemesTableElement setName(String name) {
         this.name = name;
         return this;
@@ -24,6 +28,28 @@ public class LexemesTableElement {
     public LexemesTableElement setSpecType(String specType) {
         this.specType = specType;
         return this;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public int getLineNum() {
+        return lineNum;
+    }
+
+    public int getLineLexNum() {
+        return lineLexNum;
+    }
+
+    public String getSpecType() {
+        return specType;
+    }
+
+    public String lexeme() {
+        if(specType!=null)
+            return specType;
+        return name;
     }
 }
 

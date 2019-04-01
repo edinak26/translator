@@ -38,4 +38,7 @@ public class LexicalAnalyzer {
         }
         throw new ArrayIndexOutOfBoundsException(code.getCurLexeme());
     }
+    public TablesManager getTables(){
+        return tables;
+    }
 }

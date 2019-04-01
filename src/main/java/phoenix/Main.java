@@ -10,14 +10,13 @@ import phoenix.general.view.View;
 public class Main {
     public static void main(String[] args) throws Exception{
         Model model = new Model();
-        RelationsTable relTable = new RelationsTable(TextReader.grammar()
-                .setPath("D:\\University\\Java\\translator\\src\\main\\java\\phoenix\\accessory\\info\\stratGram").get());
+        RelationsTable relTable = new RelationsTable();
         View.setRel(relTable.getRelations());
         View.setTypes(relTable.getTerms());
         View view = new View();
         Controller controller = new Controller(model,view);
         controller.run();
-        (new LexicalAnalyzer()).analyse();
+
 
 
     }

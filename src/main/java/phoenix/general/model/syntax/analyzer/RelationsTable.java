@@ -119,7 +119,6 @@ public class RelationsTable implements Characters {
     }
 
     public String getRuleTerm(String str) {
-        //System.out.println("@"+str);
         for (List<String> rule : grammar) {
             String strRule = "";
             for (int i = 1; i < rule.size(); i++) {

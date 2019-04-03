@@ -1,6 +1,7 @@
 package phoenix.general.model.lexical.analyzer;
 
 
+import phoenix.accessory.exceptions.NotLexemeException;
 import phoenix.general.model.reader.TextReader;
 
 public class LexicalAnalyzer {
@@ -36,7 +37,7 @@ public class LexicalAnalyzer {
             tables.addCurLexeme(specType);
             return;
         }
-        throw new ArrayIndexOutOfBoundsException(code.getCurLexeme());
+        throw new NotLexemeException(code.getCurLexeme(),code.getLineNum(),code.getLexemeNum());
     }
     public TablesManager getTables(){
         return tables;

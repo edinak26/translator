@@ -62,7 +62,7 @@ public class View extends Application {
         spv.setRowHeaderWidth(150);
         spv.setEditable(false);
         spv.setPrefHeight(690);
-        spv.setPrefWidth(1200);
+        spv.setPrefWidth(1300);
         Group group = new Group(spv);
         group.prefHeight(500);
         group.prefWidth(500);

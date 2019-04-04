@@ -1,18 +1,22 @@
 package phoenix.general.model.syntax.analyzer;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import phoenix.accessory.constant.Characters;
 import phoenix.accessory.exceptions.NearLexemesException;
 import phoenix.general.model.lexical.analyzer.LexemesTableElement;
 import phoenix.general.model.lexical.analyzer.TablesManager;
-import phoenix.general.model.reader.TextReader;
 
 import java.util.*;
 
 public class SyntaxAnalyzer implements Characters {
+    private static final Logger logger = LogManager.getLogger(Messages.class.getName());
+
+
     private Stack<LexemesTableElement> stack;
     private TablesManager tables;
-    private static StackLogger logger = new StackLogger();
     RelationsTable relationsTable;
+
 
     public SyntaxAnalyzer(TablesManager tables) throws Exception {
         stack = new Stack<>();
@@ -26,7 +30,7 @@ public class SyntaxAnalyzer implements Characters {
         while (tables.hasNext()) {
             tables.goNext();
             String relation = relationsTable.getRelation(stack.peek().lexeme(), tables.get().lexeme());
-            logger.log(stack,tables.get().lexeme(),relation);
+            logger.info(Messages.stack(stack).get());
             if (relation == null) {
                 throw new NearLexemesException(stack.peek(), tables.get().lexeme());
             }

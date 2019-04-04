@@ -1,0 +1,10 @@
+.button{
+    -fx-background-color: purple;
+    -fx-text-fill: white;
+}
+.green {
+    -fx-fill: green;
+}
+.styled-text-area .red {
+    -fx-fill: white;
+}

@@ -16,8 +16,11 @@ import org.controlsfx.control.spreadsheet.SpreadsheetCell;
 import org.controlsfx.control.spreadsheet.SpreadsheetCellType;
 import org.controlsfx.control.spreadsheet.SpreadsheetView;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.scene.text.Font;
+import org.fxmisc.richtext.CodeArea;
+
 public class View extends Application {
     static List<String> types;
     static String[][] rel;
@@ -36,7 +39,7 @@ public class View extends Application {
 
 
         SpreadsheetView spread = new SpreadsheetView();
-        //scene.getStylesheets().add(0,"phoenix/general/view/styles.css");
+
 
         GridBase grid = new GridBase(types.size(), types.size());
         ArrayList<String> arr = new ArrayList<>();
@@ -63,10 +66,13 @@ public class View extends Application {
         spv.setEditable(false);
         spv.setPrefHeight(690);
         spv.setPrefWidth(1300);
-        Group group = new Group(spv);
+        CodeArea code =new CodeArea("dhfgdfgdfnnnnnnnn\ngfhfdhdfghd\ngdfsgdfgsdfgs");
+        code.setStyle(5, 10, Collections.singleton("green"));
+        Group group = new Group(spv,code);
         group.prefHeight(500);
         group.prefWidth(500);
         Scene scene = new Scene(group, 500, 500);
+        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
     }

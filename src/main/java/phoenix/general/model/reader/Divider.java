@@ -25,7 +25,7 @@ public abstract class Divider {
     public List<List<String>> splitText(final List<String> text) {
         splitText = new ArrayList<>();
         for (String line : text) {
-            if(!line.equals(EMPTY)) {
+            if(!line.equals(EMPTY)) {//TODO need to optimize
                 if (line.equals(stopLine))
                     return splitText;
                 if (isStarted) {

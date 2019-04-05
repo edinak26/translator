@@ -1,4 +1,4 @@
-package phoenix.general.model.reader;
+package phoenix.general.interfaces;
 
 public interface Characters {
     String COLON = ":";

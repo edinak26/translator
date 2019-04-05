@@ -1,7 +1,7 @@
 package phoenix.general.model.reader;
 
 
-import phoenix.general.model.lexical.analyzer.SeparatorConstants;
+import phoenix.general.interfaces.SeparatorConstants;
 
 public class CodeDivider extends Divider implements SeparatorConstants {
 

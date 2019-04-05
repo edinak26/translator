@@ -2,6 +2,7 @@ package phoenix.general.model.reader;
 
 
 import phoenix.accessory.constant.Characters;
+import phoenix.general.interfaces.MetaLanguage;
 
 public class GrammarDivider extends Divider implements Characters, MetaLanguage {
     public GrammarDivider() {

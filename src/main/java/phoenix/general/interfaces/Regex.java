@@ -1,6 +1,8 @@
-package phoenix.general.model.reader;
+package phoenix.general.interfaces;
 
-public interface Regex extends Numbers{
+import phoenix.general.interfaces.Numbers;
+
+public interface Regex extends Numbers {
     String OPEN_REGEX_CHARACTER_CLASS = "[";
     String REGEX_NOT = "^";
     String CLOSE_REGEX_CHARACTER_CLASS = "]";

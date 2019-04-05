@@ -2,8 +2,9 @@ package phoenix.general.model.reader;
 
 
 import phoenix.accessory.constant.Characters;
+import phoenix.general.interfaces.MetaLanguage;
 
-public class DataTypesGrammarDivider extends Divider implements Characters,MetaLanguage {
+public class DataTypesGrammarDivider extends Divider implements Characters, MetaLanguage {
     DataTypesGrammarDivider() {
         selector = SELECTOR;
         lineEnd = EMPTY;

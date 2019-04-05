@@ -1,4 +1,4 @@
-package phoenix.general.model.lexical.analyzer;
+package phoenix.general.interfaces;
 
 public interface SeparatorConstants {
     String REGEX_EQUAL = "([^=^>^<^!])=([^=])";

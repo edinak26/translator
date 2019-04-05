@@ -15,5 +15,25 @@ public class Grammar implements MetaLanguage {
         grammar = GrammarConstructor.getGrammar(splitText);
     }
 
+    public NonTerminal getNonTerminal(List<String> rightPart) {
+        for (Entry<NonTerminal, List<List<String>>> grammarEntry : grammar.entrySet()) {
+            for (List<String> grammarRightPart : grammarEntry.getValue()) {
+                if (rightPart.equals(grammarRightPart)) {
+                    return grammarEntry.getKey();
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<List<String>> getRightPart(String nonTerminal) {
+        for (Entry<NonTerminal,List<List<String>>> entry : grammar.entrySet()){
+            if(entry.getKey().getName().equals(nonTerminal)){
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
 
 }

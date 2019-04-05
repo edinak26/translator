@@ -16,7 +16,7 @@ public class RelationsTable implements Characters {
     public RelationsTable() throws Exception {
         this.grammar = TextReader.grammar()
                 .setPath("D:\\University\\Java\\translator\\src\\main\\java\\phoenix\\accessory\\info\\stratGram").get();
-        Searcher.setGrammar(grammar);
+        SetsSearcher.setGrammar(grammar);
         this.terms = getUniqueTerms();
         relations = new String[terms.size() + 1][terms.size() + 1];
         setRelations();
@@ -51,9 +51,9 @@ public class RelationsTable implements Characters {
             for (int i = 1; i < rule.size() - 1; i++) {
                 if (!rule.get(i).equals("|") && !rule.get(i + 1).equals("|")) {
                     setEqualRel(rule.get(i), rule.get(i + 1));
-                    setMoreRel(Searcher.get().last(rule.get(i)), rule.get(i + 1));
-                    setLessRel(rule.get(i), Searcher.get().first(rule.get(i + 1)));
-                    setMoreRel(Searcher.get().last(rule.get(i)), Searcher.get().first(rule.get(i + 1)));
+                    setMoreRel(SetsSearcher.get().last(rule.get(i)), rule.get(i + 1));
+                    setLessRel(rule.get(i), SetsSearcher.get().first(rule.get(i + 1)));
+                    setMoreRel(SetsSearcher.get().last(rule.get(i)), SetsSearcher.get().first(rule.get(i + 1)));
                 }
             }
         }

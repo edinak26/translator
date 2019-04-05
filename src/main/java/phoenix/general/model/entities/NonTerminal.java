@@ -14,4 +14,12 @@ public class NonTerminal {
         this.blocks = new ArrayList<>(blocks);
         Collections.reverse(this.blocks);
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<String> getBlocks() {
+        return blocks;
+    }
 }

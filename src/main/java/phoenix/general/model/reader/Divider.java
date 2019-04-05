@@ -35,7 +35,6 @@ public abstract class Divider {
                     selectRegexSeparators();
                     selectMultiRegexSeparators();
                     saveLine();
-                    System.out.println(curLine);
                 }
                 if (line.equals(startLine))
                     isStarted = true;

@@ -1,5 +1,6 @@
 package phoenix.general.model.syntax.analyzer;
 
+import phoenix.general.interfaces.Characters;
 import phoenix.general.model.entities.Grammar;
 
 import java.util.HashSet;
@@ -40,9 +41,10 @@ public class SetsSearcher {
     private HashSet<String> getFirst(String term) {
         HashSet<String> first = new HashSet<>();
         List<List<String>> rightParts = grammar.getRightPart(term);
-        for(List<String> rightPart: rightParts){
-            first.add(rightPart.get(0));
-        }
+        if (rightParts != null)
+            for (List<String> rightPart : rightParts) {
+                first.add(rightPart.get(0));
+            }
         return first;
     }
 
@@ -53,8 +55,8 @@ public class SetsSearcher {
         return collected;
     }
 
-    private void lastPlus(String term){
-        if(!collected.contains(term)) {
+    private void lastPlus(String term) {
+        if (!collected.contains(term)) {
             collected.add(term);
             for (String ter : getLast(term)) {
                 lastPlus(ter);
@@ -62,12 +64,13 @@ public class SetsSearcher {
         }
     }
 
-    private HashSet<String> getLast(String term){
+    private HashSet<String> getLast(String term) {
         HashSet<String> last = new HashSet<>();
         List<List<String>> rightParts = grammar.getRightPart(term);
-        for(List<String> rightPart: rightParts){
-            last.add(rightPart.get(rightPart.size()-1));
-        }
+        if (rightParts != null)
+            for (List<String> rightPart : rightParts) {
+                last.add(rightPart.get(rightPart.size() - 1));
+            }
         return last;
     }
 

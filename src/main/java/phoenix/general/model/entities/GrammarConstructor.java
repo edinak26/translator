@@ -40,9 +40,10 @@ public class GrammarConstructor implements Patterns {
     }
 
     private void addNonTerminal(List<String> line) {
-        NonTerminal nonTerminal = new NonTerminal(line.remove(0));
+        ArrayList<String> rightPart = new ArrayList<>(line);
+        NonTerminal nonTerminal = new NonTerminal(rightPart.remove(0));
         nonTerminal.setBlocks(visibilityBlocks);
-        grammar.put(nonTerminal, splitLine(line));
+        grammar.put(nonTerminal, splitLine(rightPart));
     }
 
     private List<List<String>> splitLine(List<String> line) {

@@ -4,8 +4,10 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import phoenix.accessory.constant.Characters;
 import phoenix.accessory.exceptions.NearLexemesException;
+import phoenix.general.model.entities.Grammar;
 import phoenix.general.model.lexical.analyzer.LexemesTableElement;
 import phoenix.general.model.lexical.analyzer.TablesManager;
+import phoenix.general.model.reader.TextReader;
 
 import java.util.*;
 
@@ -15,7 +17,9 @@ public class SyntaxAnalyzer implements Characters {
 
     private Stack<LexemesTableElement> stack;
     private TablesManager tables;
+    Grammar grammar;
     RelationsTable relationsTable;
+    private static final String STRAT_GRAM_PATH = "D:\\University\\Java\\translator\\src\\main\\java\\phoenix\\accessory\\info\\stratGram";
 
 
     public SyntaxAnalyzer(TablesManager tables) throws Exception {
@@ -23,6 +27,7 @@ public class SyntaxAnalyzer implements Characters {
         stack.push(new LexemesTableElement());
         this.tables = tables;
         relationsTable = new RelationsTable();
+        grammar=new Grammar(TextReader.grammar().setPath(STRAT_GRAM_PATH).get());
     }
 
     public void analyze() {
@@ -54,20 +59,12 @@ public class SyntaxAnalyzer implements Characters {
                         }
                         Collections.reverse(lexemes);
 
-                        for (String lex : lexemes) {
-                            str += lex;
-                        }
-                        if(relationsTable.getRuleTerm(str)==null){
-                            throw new NearLexemesException(stack.peek(), tables.get().lexeme());
-                        }
                         stack.push(new LexemesTableElement()
-                                .setName(relationsTable.getRuleTerm(str))
+                                .setName(grammar.getNonTerminal(lexemes).getName())
                                 .setLineNum(line)
                                 .setLineLexNum(lexNum));
                         tables.goBack();
                         i = 0;
-                    }else{
-                        //throw new NearLexemesException(stack.peek(), tables.get().lexeme());
                     }
                 }
 
@@ -90,10 +87,7 @@ public class SyntaxAnalyzer implements Characters {
                     for (String lex : lexemes) {
                         str += lex;
                     }
-                    if(relationsTable.getRuleTerm(str)==null){
-                        throw new NearLexemesException(stack.peek(), tables.get().lexeme());
-                    }
-                    stack.push(new LexemesTableElement().setName(relationsTable.getRuleTerm(str)));
+                    stack.push(new LexemesTableElement().setName(grammar.getNonTerminal(lexemes).getName()));
                     i = 0;
                 }
             }

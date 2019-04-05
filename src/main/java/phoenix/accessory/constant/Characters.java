@@ -6,10 +6,7 @@ public interface Characters {
     String RELATION_LESS = "⋖";
     String VIEW_GRAMMAR_EQUALITY = "≔";
 
-    String GRAMMAR_EQUALITY = "::=";
-    String GRAMMAR_OR = "\\|";
-
-    String SELECTOR = "@";
+    //String SELECTOR = "@";
     String SPACE = " ";
     String EMPTY = "";
 }

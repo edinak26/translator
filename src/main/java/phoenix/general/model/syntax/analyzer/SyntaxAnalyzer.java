@@ -30,7 +30,7 @@ public class SyntaxAnalyzer implements Characters {
         while (tables.hasNext()) {
             tables.goNext();
             String relation = relationsTable.getRelation(stack.peek().lexeme(), tables.get().lexeme());
-            logger.info(Messages.stack(stack).get());
+            //logger.info(Messages.stack(stack).get());
             if (relation == null) {
                 throw new NearLexemesException(stack.peek(), tables.get().lexeme());
             }

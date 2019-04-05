@@ -15,7 +15,6 @@ public class LexicalAnalyzer {
         code = new CodeText(TextReader.code().get());
         lexemeTypes = new LexemeTypes(TextReader.grammar().get());
         specTypes = new SpecialLexemeTypes(TextReader.regexGrammar().get());
-        System.out.println(TextReader.dataTypesGrammar().get());
         tables = new TablesManager(code);
     }
     public void analyse(){
@@ -23,7 +22,6 @@ public class LexicalAnalyzer {
             code.goToNextLexeme();
             saveLexeme();
         }
-        tables.show();
     }
     private void saveLexeme(){
         boolean hasLexType = lexemeTypes.hasType(code.getCurLexeme());

@@ -17,7 +17,7 @@ public interface MetaLanguage extends Regex, Characters {
 
     String GRAMMAR_TERMINAL_REGEX = "";//TODO add terminal check in future
 
-    String GRAMMAR_NON_TERMINAL_REGEX =
+    String GRAMMAR_NON_TERMINAL_GROUP_REGEX =
             OPEN_REGEX_GROUP
                     + NON_TERMINAL_START
                     + GRAMMAR_ELEMENT_NAME_REGEX

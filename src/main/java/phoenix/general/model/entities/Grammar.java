@@ -15,15 +15,79 @@ public class Grammar implements MetaLanguage {
         SetsSearcher.setGrammar(this);
     }
 
-    public NonTerminal getNonTerminal(List<String> rightPart) {
+    public NonTerminal getBlockNonTerminal(List<String> rightPart, String currVisibilityBlock) {
+
+        NonTerminal result = null;
         for (Entry<NonTerminal, List<List<String>>> grammarEntry : grammar.entrySet()) {
             for (List<String> grammarRightPart : grammarEntry.getValue()) {
-                if (rightPart.equals(grammarRightPart)) {
-                    return grammarEntry.getKey();
+                boolean hasVisibilityBlock = grammarEntry.getKey().getCurrBlock() != null;
+                if (hasVisibilityBlock) {
+                    boolean isCurrVisibilityBlock = grammarEntry.getKey().getCurrBlock().equals(currVisibilityBlock);
+                    boolean isNonTerminalFound = rightPart.equals(grammarRightPart);
+                    if (isCurrVisibilityBlock && isNonTerminalFound) {
+                        checkUniqueness(result, rightPart);
+                        result = grammarEntry.getKey();
+                    }
                 }
             }
         }
-        return null;
+        return result;
+    }
+
+    public NonTerminal getGlobalNonTerminal(List<String> rightPart){
+        NonTerminal result = null;
+        for (Entry<NonTerminal, List<List<String>>> grammarEntry : grammar.entrySet()) {
+            for (List<String> grammarRightPart : grammarEntry.getValue()) {
+                    if (rightPart.equals(grammarRightPart)) {
+                        checkUniqueness(result, rightPart);
+                        result = grammarEntry.getKey();
+                    }
+            }
+        }
+        checkResult(result,rightPart);
+        return result;
+    }
+
+    private void checkUniqueness(NonTerminal result, List<String> rightPart) {
+        if (result != null)
+            throw new RuntimeException(
+                    "Un correct grammar, right part:"
+                            + rightPart.toString()
+                            + " has more then one replace"
+                            + "\n second non terminal is:" + result.getName());
+    }
+
+    private void checkResult(NonTerminal result,List<String> rightPart){
+        if (result == null)
+            throw new RuntimeException("Non terminal is not found for:"+ rightPart.toString());
+    }
+
+    public NonTerminal getNonTerminal(List<String> rightPart, String currVisibilityBlock) {
+        NonTerminal res = null;
+        int counter = 0;
+        for (Entry<NonTerminal, List<List<String>>> grammarEntry : grammar.entrySet()) {
+            for (List<String> grammarRightPart : grammarEntry.getValue()) {
+                if (rightPart.equals(grammarRightPart)) {
+                    counter++;
+                    res = grammarEntry.getKey();
+                }
+            }
+        }
+
+        if (counter > 1) {
+            counter = 0;
+            for (Entry<NonTerminal, List<List<String>>> grammarEntry : grammar.entrySet()) {
+                for (List<String> grammarRightPart : grammarEntry.getValue()) {
+                    if (rightPart.equals(grammarRightPart) && grammarEntry.getKey().getCurrBlock().equals(currVisibilityBlock)) {
+                        counter++;
+                        res = grammarEntry.getKey();
+                    }
+                }
+            }
+            if (counter > 1)
+                throw new RuntimeException("Un correct grammar, right part:" + rightPart.toString() + " has more then one replace");
+        }
+        return res;
     }
 
     public List<List<String>> getRightPart(String nonTerminal) {
@@ -37,12 +101,17 @@ public class Grammar implements MetaLanguage {
 
     public List<String> getUniqueTerminals() {
         Set<String> terminals = new LinkedHashSet<>();
-        for (Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
-            terminals.add(entry.getKey().getName());
-            for (List<String> rightPart : entry.getValue()) {
+
+        for (NonTerminal nonTerminal : grammar.keySet()) {
+            terminals.add(nonTerminal.getName());
+        }
+
+        for (List<List<String>> rightParts : grammar.values()) {
+            for (List<String> rightPart : rightParts) {
                 terminals.addAll(rightPart);
             }
         }
+
         return new ArrayList<>(terminals);
     }
 
@@ -52,7 +121,7 @@ public class Grammar implements MetaLanguage {
             for (List<String> rightPart : entry.getValue()) {
                 for (int i = 0; i < rightPart.size() - 1; i++) {
                     String currTerminal = rightPart.get(i);
-                    String nextTerminal = rightPart.get(i+1);
+                    String nextTerminal = rightPart.get(i + 1);
                     Set<String> curLast = SetsSearcher.get().last(currTerminal);
                     Set<String> nextFirst = SetsSearcher.get().first(nextTerminal);
 
@@ -63,5 +132,27 @@ public class Grammar implements MetaLanguage {
                 }
             }
         }
+    }
+
+    public void show() {
+        for (Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
+            System.out.print(entry.getKey().getName() + GRAMMAR_EQUAL);
+            for (List<String> rightPart : entry.getValue()) {
+                for (String elem : rightPart) {
+                    System.out.print(elem);
+                }
+                System.out.print(GRAMMAR_OR);
+            }
+            System.out.println();
+        }
+    }
+
+    public String getStartVisibilityBlocks() {
+        for (NonTerminal nonTerminal : grammar.keySet()) {
+            if (nonTerminal.getCurrBlock() != null) {
+                return nonTerminal.getCurrBlock();
+            }
+        }
+        return null;
     }
 }

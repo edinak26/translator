@@ -68,7 +68,7 @@ public class View extends Application {
         spv.setPrefWidth(1300);
         CodeArea code =new CodeArea("dhfgdfgdfnnnnnnnn\ngfhfdhdfghd\ngdfsgdfgsdfgs");
         code.setStyle(5, 10, Collections.singleton("green"));
-        Group group = new Group(spv,code);
+        Group group = new Group(spv);//,code);
         group.prefHeight(500);
         group.prefWidth(500);
         Scene scene = new Scene(group, 500, 500);

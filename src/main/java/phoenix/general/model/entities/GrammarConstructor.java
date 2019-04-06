@@ -5,7 +5,6 @@ import phoenix.general.interfaces.Patterns;
 
 import java.util.*;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class GrammarConstructor implements Patterns {
     private Map<NonTerminal, List<List<String>>> grammar;
@@ -13,7 +12,7 @@ public class GrammarConstructor implements Patterns {
     private Stack<String> visibilityBlocks;
 
     private GrammarConstructor(List<List<String>> splitText) {
-        grammar = new HashMap<>();
+        grammar = new LinkedHashMap<>();
         this.splitText = splitText;
         visibilityBlocks = new Stack<>();
 

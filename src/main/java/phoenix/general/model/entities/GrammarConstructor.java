@@ -10,6 +10,7 @@ public class GrammarConstructor implements Patterns {
     private Map<NonTerminal, List<List<String>>> grammar;
     private List<List<String>> splitText;
     private Stack<String> visibilityBlocks;
+    private boolean isAxiom = false;
 
     private GrammarConstructor(List<List<String>> splitText) {
         grammar = new LinkedHashMap<>();
@@ -42,28 +43,35 @@ public class GrammarConstructor implements Patterns {
         ArrayList<String> rightPart = new ArrayList<>(line);
         NonTerminal nonTerminal = new NonTerminal(rightPart.remove(0));
         nonTerminal.setBlocks(visibilityBlocks);
+        setAxiom(nonTerminal);
         grammar.put(nonTerminal, splitLine(rightPart));
+    }
+
+    private void setAxiom(NonTerminal nonTerminal) {
+        nonTerminal.setAxiom(isAxiom);
+        if (isAxiom)
+            isAxiom = false;
     }
 
     private List<List<String>> splitLine(List<String> line) {
         List<List<String>> splitLine = new ArrayList<>();
         splitLine.add(new ArrayList<>());
         for (String elem : line) {
-            if(elem.equals(GRAMMAR_OR)){
+            if (elem.equals(GRAMMAR_OR)) {
                 splitLine.add(new ArrayList<>());
-            }
-            else {
-                splitLine.get(splitLine.size()-1).add(elem);
+            } else {
+                splitLine.get(splitLine.size() - 1).add(elem);
             }
         }
         return splitLine;
     }
 
-    private void addVisibilityBlock(String block){
+    private void addVisibilityBlock(String block) {
         visibilityBlocks.push(block);
+        isAxiom = true;
     }
 
-    private void removeVisibilityBlock(){
+    private void removeVisibilityBlock() {
         visibilityBlocks.pop();
     }
 

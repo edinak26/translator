@@ -17,114 +17,93 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
     private static final Logger logger = LogManager.getLogger(Messages.class.getName());
 
 
-    private Stack<LexemesTableElement> stack;
+    private LexemesStack lexemesStack;
     private TablesManager tables;
     Grammar grammar;
     RelationsTable relationsTable;
     private static final String STRAT_GRAM_PATH = "D:\\University\\Java\\translator\\src\\main\\java\\phoenix\\accessory\\info\\stratGram";
-    private Stack<String> currVisibilityBlock;
+    private VisibilityBlocksStack currVisBlocks;
+    private String currRelation;
 
     public SyntaxAnalyzer(TablesManager tables) throws Exception {
-        stack = new Stack<>();
-        stack.push(new LexemesTableElement());
+        lexemesStack = new LexemesStack();
         this.tables = tables;
         relationsTable = new RelationsTable();
-
         grammar = new Grammar(TextReader.grammar().setPath(STRAT_GRAM_PATH).get());
-        currVisibilityBlock = new Stack<>();
-        currVisibilityBlock.push(grammar.getStartVisibilityBlocks());
-        //System.out.println(SetsSearcher.get().first("<арифметичний вираз ініціалізації>"));;
+        currVisBlocks = new VisibilityBlocksStack(grammar);
     }
 
     public void analyze() {
-
         while (tables.hasNext()) {
             tables.goNext();
-            String relation = relationsTable.getRelation(stack.peek().lexeme(), tables.get().lexeme());
-            logger.info(Messages.stack(stack).get() + "<--(" + relation + ")--" + tables.get().lexeme()+"|"+currVisibilityBlock.toString());
-            if (relation == null) {
-                throw new NearLexemesException(stack.peek(), tables.get().lexeme());
-            }
-            if (relation.equals(RELATION_LESS) || relation.equals(RELATION_EQUALITY)) {
-                stack.push(tables.get());
-            } else if (relation.equals(RELATION_MORE)) {
-
-
-                for (int i = stack.size() - 1; i > 0; i--) {
-
-                    String rel = relationsTable.getRelation(stack.get(i - 1).lexeme(), stack.get(i).lexeme());
-                    if (rel.equals(RELATION_LESS)) {
-
-                        ArrayList<String> lexemes = new ArrayList<>();
-                        String str = "";
-                        int line = 0;
-                        int lexNum = 0;
-                        while (!stack.peek().equals(stack.get(i - 1))) {
-                            LexemesTableElement el = stack.pop();
-                            lexemes.add(el.lexeme());
-                            line = el.getLineNum();
-                            lexNum = el.getLineLexNum();
-                        }
-                        Collections.reverse(lexemes);
-
-                        System.out.println("hi" + lexemes.toString() + currVisibilityBlock.peek());
-
-                        NonTerminal nonTerminal = null;
-
-                        while (nonTerminal == null && !currVisibilityBlock.isEmpty()) {
-                            String visBlock = currVisibilityBlock.pop();
-                            nonTerminal = grammar.getBlockNonTerminal(lexemes, visBlock);
-                        }
-
-                        if(nonTerminal!=null){
-                            currVisibilityBlock.push(nonTerminal.getCurrBlock());
-                        }
-                        else {
-                            nonTerminal = grammar.getGlobalNonTerminal(lexemes);
-                        }
-
-                        /*if (!currVisibilityBlock.peek().equals(nonTerminal.getCurrBlock())) {
-                            currVisibilityBlock.push(nonTerminal.getCurrBlock());
-                        }*/
-                        System.out.println(currVisibilityBlock);
-                        stack.push(new LexemesTableElement()
-                                .setName(nonTerminal.getName())
-                                .setLineNum(line)
-                                .setLineLexNum(lexNum));
-                        tables.goBack();
-                        i = 0;
-                    }
-                }
-
-
-            }
-
-        }
-        boolean isAxiom = false;
-        while (!isAxiom) {
-            for (int i = stack.size() - 1; i > 0; i--) {
-                String rel = relationsTable.getRelation(stack.get(i - 1).lexeme(), stack.get(i).lexeme());
-                if (rel.equals(RELATION_LESS)) {
-                    ArrayList<String> lexemes = new ArrayList<>();
-                    String str = "";
-                    while (!stack.peek().equals(stack.get(i - 1))) {
-                        lexemes.add(stack.pop().lexeme());
-                    }
-                    Collections.reverse(lexemes);
-
-                    for (String lex : lexemes) {
-                        str += lex;
-                    }
-                    stack.push(new LexemesTableElement().setName(grammar.getNonTerminal(lexemes, currVisibilityBlock.peek()).getName()));
-                    i = 0;
-                }
-            }
-            if (stack.size() == 2 && stack.get(1).lexeme().equals("<програма>") && stack.get(0).lexeme().equals("#")) {
-                isAxiom = true;
-                System.out.println("End");
-            }
+            setRelation();
+            logStatus();
+            saveTableLexeme();
         }
     }
 
+    private void setRelation() {
+        currRelation = getRelation(lexemesStack.getLastLexemeName(), tables.get().lexeme());
+        checkRelation(currRelation);
+    }
 
+    private String getRelation(String lex1, String lex2) {
+        return relationsTable.getRelation(lex1, lex2);
+    }
+
+    private void checkRelation(String relation) {
+        if (relation == null) {
+            throw new RuntimeException("Лексема не может стоять здесь: "+tables.get().lexeme());
+        }
+    }
+
+    private void logStatus() {
+        logger.info(
+                lexemesStack.toString()
+                        + "<--(" + currRelation + ")--"
+                        + tables.get().lexeme() + "|"
+                        + currVisBlocks.toString());
+    }
+
+    private void saveTableLexeme() {
+
+        if (currRelation.equals(RELATION_LESS) || currRelation.equals(RELATION_EQUALITY)) {
+
+            lexemesStack.push(tables.get(), currRelation);
+
+        } else if (currRelation.equals(RELATION_MORE)) {
+
+            List<String> rightPart = lexemesStack.popLastRightPart();
+
+            NonTerminal nonTerminal = getNonTerminal(rightPart);
+            currVisBlocks.push(nonTerminal);
+            lexemesStack.push(
+                    nonTerminal.getName()
+                    ,getRelation(lexemesStack.getLastLexemeName(),nonTerminal.getName())
+            );
+            tables.goBack();
+        }
+    }
+
+    private NonTerminal getNonTerminal(List<String> rightPart) {
+        NonTerminal nonTerminal = null;
+        Stack<String> currBlocks = currVisBlocks.getBlocks();
+        while (nonTerminal == null) {
+            if (!currBlocks.empty()) {
+                //TODO think about refactor grammar class
+                // and add both to one method getNonTerminal
+                nonTerminal = grammar.getBlockNonTerminal(rightPart, currBlocks.pop());
+            } else {
+                nonTerminal = grammar.getGlobalNonTerminal(rightPart);
+            }
+        }
+        checkNonTerminal(nonTerminal, rightPart);
+        return nonTerminal;
+    }
+
+    private void checkNonTerminal(NonTerminal nonTerminal, List<String> rightPart) {
+        if (nonTerminal == null)
+            throw new RuntimeException(
+                    "NonTerminal not found in grammar for right part: " + rightPart.toString());
+    }
 }

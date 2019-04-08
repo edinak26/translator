@@ -16,7 +16,6 @@ public class Grammar implements MetaLanguage {
     }
 
     public NonTerminal getBlockNonTerminal(List<String> rightPart, String currVisibilityBlock) {
-
         NonTerminal result = null;
         for (Entry<NonTerminal, List<List<String>>> grammarEntry : grammar.entrySet()) {
             for (List<String> grammarRightPart : grammarEntry.getValue()) {

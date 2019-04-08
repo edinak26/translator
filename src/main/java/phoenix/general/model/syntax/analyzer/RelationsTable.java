@@ -21,7 +21,6 @@ public class RelationsTable implements Characters {
                 .grammar()
                 .setPath(STRAT_GRAM_PATH)
                 .get());
-        grammar.show();
 
         this.uniqueTerminals = grammar.getUniqueTerminals();
         relations = new String[uniqueTerminals.size() + 1][uniqueTerminals.size() + 1];

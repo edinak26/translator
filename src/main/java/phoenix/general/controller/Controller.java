@@ -17,6 +17,7 @@ public class Controller {
         this.view = view;
     }
     public void run() throws Exception{
+        //view.run();
         lexicalAnalyzer = new LexicalAnalyzer();
         lexicalAnalyzer.analyse();
         syntaxAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer.getTables());

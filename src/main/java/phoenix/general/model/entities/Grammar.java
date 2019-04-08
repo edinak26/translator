@@ -33,17 +33,17 @@ public class Grammar implements MetaLanguage {
         return result;
     }
 
-    public NonTerminal getGlobalNonTerminal(List<String> rightPart){
+    public NonTerminal getGlobalNonTerminal(List<String> rightPart) {
         NonTerminal result = null;
         for (Entry<NonTerminal, List<List<String>>> grammarEntry : grammar.entrySet()) {
             for (List<String> grammarRightPart : grammarEntry.getValue()) {
-                    if (rightPart.equals(grammarRightPart)) {
-                        checkUniqueness(result, rightPart);
-                        result = grammarEntry.getKey();
-                    }
+                if (rightPart.equals(grammarRightPart)) {
+                    checkUniqueness(result, rightPart);
+                    result = grammarEntry.getKey();
+                }
             }
         }
-        checkResult(result,rightPart);
+        checkResult(result, rightPart);
         return result;
     }
 
@@ -56,9 +56,9 @@ public class Grammar implements MetaLanguage {
                             + "\n second non terminal is:" + result.getName());
     }
 
-    private void checkResult(NonTerminal result,List<String> rightPart){
+    private void checkResult(NonTerminal result, List<String> rightPart) {
         if (result == null)
-            throw new RuntimeException("Non terminal is not found for:"+ rightPart.toString());
+            throw new RuntimeException("Non terminal is not found for:" + rightPart.toString());
     }
 
     public NonTerminal getNonTerminal(List<String> rightPart, String currVisibilityBlock) {
@@ -153,5 +153,9 @@ public class Grammar implements MetaLanguage {
             }
         }
         return null;
+    }
+
+    public Iterable<? extends Entry<NonTerminal, List<List<String>>>> entrySet() {
+        return grammar.entrySet();
     }
 }

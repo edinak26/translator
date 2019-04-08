@@ -3,11 +3,10 @@ package phoenix.general.model.syntax.analyzer;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import phoenix.accessory.constant.Characters;
-import phoenix.accessory.exceptions.NearLexemesException;
 import phoenix.general.interfaces.MetaLanguage;
 import phoenix.general.model.entities.Grammar;
+import phoenix.general.model.entities.GrammarSetsSearcher;
 import phoenix.general.model.entities.NonTerminal;
-import phoenix.general.model.lexical.analyzer.LexemesTableElement;
 import phoenix.general.model.lexical.analyzer.TablesManager;
 import phoenix.general.model.reader.TextReader;
 
@@ -31,6 +30,8 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
         relationsTable = new RelationsTable();
         grammar = new Grammar(TextReader.grammar().setPath(STRAT_GRAM_PATH).get());
         currVisBlocks = new VisibilityBlocksStack(grammar);
+        GrammarSetsSearcher.setGrammar(grammar);
+        System.out.println(GrammarSetsSearcher.getAfterPlus("<ініціалізація змінних>","<:Блок ініціалізації змінних:>").toString());
     }
 
     public void analyze() {

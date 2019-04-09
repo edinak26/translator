@@ -29,8 +29,12 @@ public class GrammarSetsSearcher {
         return GrammarSetsSearcher.get().last(term);
     }
 
-    public static Set<String> getAfterPlus(String term,String block){
-        return GrammarSetsSearcher.get().after(term,block);
+    public static Set<String> getAfterMinus(String term, String block) {
+        return GrammarSetsSearcher.get().after(term, block);
+    }
+
+    public static Set<String> getBeforePlus(String term, String block) {
+        return GrammarSetsSearcher.get().before(term, block);
     }
 
     public static GrammarSetsSearcher get() {
@@ -49,62 +53,6 @@ public class GrammarSetsSearcher {
             lastPlus(ter);
         }
         return collected;
-    }
-
-    private Set<String> after(String term, String block) {
-        afterFirst(term, block);
-        afterEquals(term, block);
-        return collected;
-    }
-
-    public void afterFirst(String term, String block) {
-        if(!searched.contains(term)) {
-            searched.add(term);
-            collected.addAll(getAfter(term, block));
-            for (String terminal : getAfter(term, block)) {
-                collected.addAll(GrammarSetsSearcher.getFirstPlus(terminal));
-            }
-        }
-    }
-
-    public void afterEquals(String term, String block) {
-        if(!searched.contains(term)) {
-            searched.add(term);
-            for (NonTerminal nonTerminal : getNonTermsWithTermEnd(term, block)) {
-                afterFirst(nonTerminal.getName(), block);
-                afterEquals(nonTerminal.getName(), block);
-            }
-        }
-    }
-
-    public Set<NonTerminal> getNonTermsWithTermEnd(String term, String block) {//TODO move it to Grammar class
-        Set<NonTerminal> nonTerminals = new HashSet<>();
-        for (Map.Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
-            for (List<String> rightPart : entry.getValue()) {
-                boolean isTermEnd = term.equals(rightPart.get(rightPart.size() - 1));
-                boolean isBlock = entry.getKey().getCurrBlock() != null && entry.getKey().getCurrBlock().equals(block);
-                if (isTermEnd&&isBlock) {
-                    nonTerminals.add(entry.getKey());
-                }
-            }
-        }
-        return nonTerminals;
-    }
-
-    public Set<String> getAfter(String term, String block) {
-        Set<String> after = new HashSet<>();
-        for (Map.Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
-            for (List<String> rightPart : entry.getValue()) {
-                for (int i = 0; i < rightPart.size() - 1; i++) {
-                    boolean isCurLexeme = rightPart.get(i).equals(term);//TODO add not null global block
-                    boolean isCurBlock = entry.getKey().getCurrBlock() != null && entry.getKey().getCurrBlock().equals(block);
-                    if (isCurLexeme && isCurBlock) {
-                        after.add(rightPart.get(i + 1));
-                    }
-                }
-            }
-        }
-        return after;
     }
 
     private void firstPlus(String term) {
@@ -144,6 +92,86 @@ public class GrammarSetsSearcher {
             }
         return last;
     }
+
+
+    private Set<String> after(String term, String block) {
+        afterFirst(term, block);
+        afterEquals(term, block);
+        return collected;
+    }
+
+    private Set<String> before(String term, String block) {
+        beforeLast(term, block);
+        beforeEquals(term, block);
+        return collected;
+    }
+
+    public void afterFirst(String term, String block) {
+        for (String terminal : getAfter(term, block)) {
+            if (!grammar.isNonTerminal(terminal)) {
+                collected.add(terminal);
+            }
+            collected.addAll(GrammarSetsSearcher.getFirstPlus(terminal));
+        }
+    }
+
+    public void beforeLast(String term, String block) {
+        for (String terminal : getBefore(term, block)) {
+            collected.add(terminal);
+            collected.addAll(GrammarSetsSearcher.getLastPlus(terminal));
+        }
+    }
+
+    public void afterEquals(String term, String block) {
+        if (!searched.contains(term)) {
+            searched.add(term);
+            for (NonTerminal nonTerminal : grammar.getNonTermsByEnd(term, block)) {
+                after(nonTerminal.getName(), block);
+            }
+        }
+    }
+
+    public void beforeEquals(String term, String block) {
+        if (!searched.contains(term)) {
+            searched.add(term);
+            for (NonTerminal nonTerminal : grammar.getNonTermsByStart(term, block)) {
+                before(nonTerminal.getName(), block);
+            }
+        }
+    }
+
+    public Set<String> getAfter(String term, String block) {
+        Set<String> after = new HashSet<>();
+        for (Map.Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
+            for (List<String> rightPart : entry.getValue()) {
+                for (int i = 0; i < rightPart.size() - 1; i++) {
+                    boolean isCurLexeme = rightPart.get(i).equals(term);//TODO add not null global block
+                    boolean isCurBlock = entry.getKey().getCurrBlock() != null && entry.getKey().getCurrBlock().equals(block);
+                    if (isCurLexeme && isCurBlock) {
+                        after.add(rightPart.get(i + 1));
+                    }
+                }
+            }
+        }
+        return after;
+    }
+
+    public Set<String> getBefore(String term, String block) {
+        Set<String> before = new HashSet<>();
+        for (Map.Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
+            for (List<String> rightPart : entry.getValue()) {
+                for (int i = 1; i < rightPart.size(); i++) {
+                    boolean isCurLexeme = rightPart.get(i).equals(term);//TODO add not null global block
+                    boolean isCurBlock = entry.getKey().getCurrBlock() != null && entry.getKey().getCurrBlock().equals(block);
+                    if (isCurLexeme && isCurBlock) {
+                        before.add(rightPart.get(i - 1));
+                    }
+                }
+            }
+        }
+        return before;
+    }
+
 
 }
 

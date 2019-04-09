@@ -158,4 +158,41 @@ public class Grammar implements MetaLanguage {
     public Iterable<? extends Entry<NonTerminal, List<List<String>>>> entrySet() {
         return grammar.entrySet();
     }
+
+    public boolean isNonTerminal(String terminal) {
+        for (NonTerminal nonTerminal : grammar.keySet()) {
+            if (nonTerminal.getName().equals(terminal)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Set<NonTerminal> getNonTermsByEnd(String term, String block) {
+        Set<NonTerminal> nonTerminals = new HashSet<>();
+        for (Map.Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
+            for (List<String> rightPart : entry.getValue()) {
+                boolean isTermEnd = term.equals(rightPart.get(rightPart.size() - 1));
+                boolean isBlock = entry.getKey().getCurrBlock() != null && entry.getKey().getCurrBlock().equals(block);
+                if (isTermEnd && isBlock) {
+                    nonTerminals.add(entry.getKey());
+                }
+            }
+        }
+        return nonTerminals;
+    }
+
+    public Set<NonTerminal> getNonTermsByStart(String term, String block) {
+        Set<NonTerminal> nonTerminals = new HashSet<>();
+        for (Map.Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
+            for (List<String> rightPart : entry.getValue()) {
+                boolean isTermStart = term.equals(rightPart.get(0));
+                boolean isBlock = entry.getKey().getCurrBlock() != null && entry.getKey().getCurrBlock().equals(block);
+                if (isTermStart && isBlock) {
+                    nonTerminals.add(entry.getKey());
+                }
+            }
+        }
+        return nonTerminals;
+    }
 }

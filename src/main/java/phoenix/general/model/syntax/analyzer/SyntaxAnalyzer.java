@@ -31,7 +31,9 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
         grammar = new Grammar(TextReader.grammar().setPath(STRAT_GRAM_PATH).get());
         currVisBlocks = new VisibilityBlocksStack(grammar);
         GrammarSetsSearcher.setGrammar(grammar);
-        System.out.println(GrammarSetsSearcher.getAfterPlus("<ініціалізація змінних>","<:Блок ініціалізації змінних:>").toString());
+        System.out.println(GrammarSetsSearcher.getAfterMinus("<D>","<:Відношення:>").toString());
+
+        System.out.println(GrammarSetsSearcher.getBeforePlus("<D>","<:Відношення:>").toString());
     }
 
     public void analyze() {

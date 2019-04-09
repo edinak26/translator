@@ -7,10 +7,16 @@ import java.util.*;
 public class NonTerminal implements MetaLanguage {
     private String name;
     private List<String> blocks;
-    private boolean isAxiom;
+    private boolean isAxiom=false;
 
     NonTerminal(String name) {
         this.name = name;
+    }
+
+    NonTerminal(String name,String block){
+        this.name=name;
+        this.blocks = new ArrayList<>();
+        this.blocks.add(block);
     }
 
     public void setBlocks(Stack<String> blocks) {

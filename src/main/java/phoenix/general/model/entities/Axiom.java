@@ -65,18 +65,40 @@ public class Axiom extends NonTerminal {
         }
     }
 
-    public String getNextBlock(String lastLex, String nextLex) {
-        System.out.println("for "+getName()+" l:"+lastLex+" | n:"+nextLex);
+    public String getNextBlock(String lastLex, String nextLex, String currBlock) {
+        String resultAfter="";
         for (Map.Entry<String, Set<String>[]> entry : blocksSets.entrySet()) {
-            System.out.println(entry.getKey()+":\n"+entry.getValue()[0].toString()+"\n"+entry.getValue()[1]);
             for (String afterLex : entry.getValue()[0]) {
-                for (String beforeLex : entry.getValue()[1]) {
-
-                    if (afterLex.equals(nextLex))// && beforeLex.equals(lastLex))
-                        return entry.getKey();
+                if (afterLex.equals(nextLex)) {
+                    System.out.println('-');
+                    resultAfter = entry.getKey();
                 }
             }
         }
-        return null;
+        String resultBefore="";
+        for (Map.Entry<String, Set<String>[]> entry : blocksSets.entrySet()) {
+            for (String beforeLex : entry.getValue()[1]) {
+                if (beforeLex.equals(lastLex)) {
+                    System.out.println("+"+entry.getKey()+lastLex);
+                    resultBefore = entry.getKey();
+                }
+            }
+        }
+        System.out.println("="+resultAfter+" "+resultBefore);
+       // if(resultBefore.equals(currBlock))
+            //return resultBefore;
+        return resultAfter;
+    }
+
+    public void showAfter() {
+        for (Map.Entry<String, Set<String>[]> entry : blocksSets.entrySet()) {
+            System.out.println(entry.getKey() + " " + entry.getValue()[0]);
+        }
+    }
+
+    public void showBefore() {
+        for (Map.Entry<String, Set<String>[]> entry : blocksSets.entrySet()) {
+            System.out.println(entry.getKey() + " " + entry.getValue()[1]);
+        }
     }
 }

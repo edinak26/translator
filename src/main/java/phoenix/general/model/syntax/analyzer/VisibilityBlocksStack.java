@@ -43,7 +43,7 @@ public class VisibilityBlocksStack {
         visibilityBlocks.push(block);
     }
 
-    public String pop(String block) {
+    public String pop() {
         return visibilityBlocks.pop();
     }
 

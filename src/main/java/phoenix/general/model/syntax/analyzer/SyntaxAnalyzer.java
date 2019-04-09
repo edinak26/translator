@@ -34,6 +34,7 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
     public void analyze() {
         while (tables.hasNext()) {
             tables.goNext();
+            System.out.println("@" + lexemesStack.getLastLexemeName());
             setRelation();
             logStatus();
             saveTableLexeme();
@@ -81,16 +82,18 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
     }
 
     private void checkAxiom(NonTerminal nonTerminal) {
-        if (nonTerminal.isAxiom()) {
-            Axiom axiom = (Axiom) nonTerminal;
-            System.out.println(
-                    "---" + axiom.getNextBlock(lexemesStack.peek(),tables.get().lexeme())
-                            + "|" + nonTerminal.getName()
-                            + "t:" + tables.get().lexeme());
-            currVisBlocks.push(axiom.getNextBlock(lexemesStack.peek(),tables.get().lexeme()));
-        }
-        else{
-            currVisBlocks.push(nonTerminal);
+        boolean isAxiom = nonTerminal.isAxiom();
+        boolean isCurrAxiom = nonTerminal.isAxiomOf(currVisBlocks.getCurrentBlock());
+        boolean isNewBlock = !nonTerminal.getCurrBlock().equals(currVisBlocks.getCurrentBlock());
+        if (isAxiom) {
+            if (isCurrAxiom) {
+                currVisBlocks.pop();
+            } else {
+                Axiom axiom = (Axiom) nonTerminal;
+                axiom.getNextBlock(lexemesStack.peek(), tables.get().lexeme(), currVisBlocks.getCurrentBlock());
+                if (isNewBlock)
+                    currVisBlocks.push(axiom.getNextBlock(lexemesStack.peek(), tables.get().lexeme(), currVisBlocks.getCurrentBlock()));
+            }
         }
     }
 

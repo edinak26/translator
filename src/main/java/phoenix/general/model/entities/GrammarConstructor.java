@@ -2,11 +2,13 @@ package phoenix.general.model.entities;
 
 import phoenix.general.interfaces.MetaLanguage;
 import phoenix.general.interfaces.Patterns;
+import phoenix.general.model.syntax.analyzer.SetsSearcher;
 
 import java.util.*;
 import java.util.regex.Matcher;
 
 public class GrammarConstructor implements Patterns {
+    private Grammar resGrammar;
     private Map<NonTerminal, List<List<String>>> grammar;
     private List<List<String>> splitText;
     private Stack<String> visibilityBlocks;
@@ -16,16 +18,21 @@ public class GrammarConstructor implements Patterns {
         grammar = new LinkedHashMap<>();
         this.splitText = splitText;
         visibilityBlocks = new Stack<>();
-
     }
 
-    public static Map<NonTerminal, List<List<String>>> getGrammar(List<List<String>> splitText) {
+    public static Grammar getGrammar(List<List<String>> splitText) {
         GrammarConstructor constructor = new GrammarConstructor(splitText);
         constructor.convert();
-        return constructor.grammar;
+        return constructor.resGrammar;
     }
 
     private void convert() {
+        convertSplitText();
+        resGrammar = new Grammar(grammar);
+        saveAxioms();
+    }
+
+    private void convertSplitText() {
         for (List<String> line : splitText) {
             String first = line.get(0);
             if (isNonTerminal(first)) {
@@ -38,6 +45,29 @@ public class GrammarConstructor implements Patterns {
                 throw new RuntimeException("Undefine grammar element: " + first);
         }
     }
+
+    private void saveAxioms() {
+        Set<NonTerminal> nonTerminals= new HashSet<>(grammar.keySet());
+        for (NonTerminal nonTerminal : nonTerminals) {
+            if (nonTerminal.isAxiom()) {
+                convertToAxiom(nonTerminal);
+            }
+        }
+
+    }
+
+    private void convertToAxiom(NonTerminal nonTerminal) {
+        Axiom axiom = new Axiom(nonTerminal);
+        for (String block : resGrammar.getUniqueBlocks()) {
+            Set<String> after = GrammarSetsSearcher.getAfterMinus(nonTerminal.getName(), block);
+            Set<String> before = GrammarSetsSearcher.getBeforePlus(nonTerminal.getName(), block);
+            axiom.addSets(block, after, before);
+        }
+        axiom.check();
+        grammar.put(axiom, grammar.get(nonTerminal));
+        grammar.remove(nonTerminal);
+    }
+
 
     private void addNonTerminal(List<String> line) {
         ArrayList<String> rightPart = new ArrayList<>(line);

@@ -47,4 +47,8 @@ public class NonTerminal implements MetaLanguage {
     public boolean isAxiomOf(String block) {
         return isAxiom && blocks.get(0).equals(block);
     }
+
+    public boolean isAxiom() {
+        return isAxiom;
+    }
 }

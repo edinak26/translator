@@ -2,6 +2,7 @@ package phoenix.general.model.syntax.analyzer;
 
 import phoenix.accessory.constant.Characters;
 import phoenix.general.model.entities.Grammar;
+import phoenix.general.model.entities.GrammarConstructor;
 import phoenix.general.model.reader.TextReader;
 
 import java.util.*;
@@ -17,7 +18,7 @@ public class RelationsTable implements Characters {
     private static final String STRAT_GRAM_PATH = "D:\\University\\Java\\translator\\src\\main\\java\\phoenix\\accessory\\info\\stratGram";
 
     public RelationsTable() throws Exception {
-        this.grammar = new Grammar(TextReader
+        this.grammar = GrammarConstructor.getGrammar(TextReader
                 .grammar()
                 .setPath(STRAT_GRAM_PATH)
                 .get());

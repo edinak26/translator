@@ -10,9 +10,10 @@ import java.util.Map.Entry;
 public class Grammar implements MetaLanguage {
     private Map<NonTerminal, List<List<String>>> grammar;
 
-    public Grammar(List<List<String>> splitText) {
-        grammar = GrammarConstructor.getGrammar(splitText);
-        SetsSearcher.setGrammar(this);
+    public Grammar(Map<NonTerminal, List<List<String>>> grammar) {
+        this.grammar = grammar;
+        SetsSearcher.setGrammar(this);//TODO delete old searcher
+        GrammarSetsSearcher.setGrammar(this);
     }
 
     public NonTerminal getBlockNonTerminal(List<String> rightPart, String currVisibilityBlock) {
@@ -194,5 +195,14 @@ public class Grammar implements MetaLanguage {
             }
         }
         return nonTerminals;
+    }
+
+    public Set<String> getUniqueBlocks() {
+        Set<String> blocks = new HashSet<>();
+        for(NonTerminal nonTerminal :grammar.keySet()){
+            if(nonTerminal.getCurrBlock()!=null)//TODO add global block
+            blocks.add(nonTerminal.getCurrBlock());
+        }
+        return blocks;
     }
 }

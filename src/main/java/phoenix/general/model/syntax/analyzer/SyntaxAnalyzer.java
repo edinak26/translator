@@ -4,9 +4,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import phoenix.accessory.constant.Characters;
 import phoenix.general.interfaces.MetaLanguage;
-import phoenix.general.model.entities.Grammar;
-import phoenix.general.model.entities.GrammarSetsSearcher;
-import phoenix.general.model.entities.NonTerminal;
+import phoenix.general.model.entities.*;
 import phoenix.general.model.lexical.analyzer.TablesManager;
 import phoenix.general.model.reader.TextReader;
 
@@ -28,12 +26,9 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
         lexemesStack = new LexemesStack();
         this.tables = tables;
         relationsTable = new RelationsTable();
-        grammar = new Grammar(TextReader.grammar().setPath(STRAT_GRAM_PATH).get());
+        grammar = GrammarConstructor.getGrammar(TextReader.grammar().setPath(STRAT_GRAM_PATH).get());
         currVisBlocks = new VisibilityBlocksStack(grammar);
         GrammarSetsSearcher.setGrammar(grammar);
-        System.out.println(GrammarSetsSearcher.getAfterMinus("<D>","<:Відношення:>").toString());
-
-        System.out.println(GrammarSetsSearcher.getBeforePlus("<D>","<:Відношення:>").toString());
     }
 
     public void analyze() {
@@ -56,7 +51,7 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
 
     private void checkRelation(String relation) {
         if (relation == null) {
-            throw new RuntimeException("Лексема не может стоять здесь: "+tables.get().lexeme());
+            throw new RuntimeException("Лексема не может стоять здесь: " + tables.get().lexeme());
         }
     }
 
@@ -69,22 +64,33 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
     }
 
     private void saveTableLexeme() {
-
         if (currRelation.equals(RELATION_LESS) || currRelation.equals(RELATION_EQUALITY)) {
-
             lexemesStack.push(tables.get(), currRelation);
 
         } else if (currRelation.equals(RELATION_MORE)) {
-
             List<String> rightPart = lexemesStack.popLastRightPart();
 
             NonTerminal nonTerminal = getNonTerminal(rightPart);
-            currVisBlocks.push(nonTerminal);
+            checkAxiom(nonTerminal);
             lexemesStack.push(
                     nonTerminal.getName()
-                    ,getRelation(lexemesStack.getLastLexemeName(),nonTerminal.getName())
+                    , getRelation(lexemesStack.getLastLexemeName(), nonTerminal.getName())
             );
             tables.goBack();
+        }
+    }
+
+    private void checkAxiom(NonTerminal nonTerminal) {
+        if (nonTerminal.isAxiom()) {
+            Axiom axiom = (Axiom) nonTerminal;
+            System.out.println(
+                    "---" + axiom.getNextBlock(lexemesStack.peek(),tables.get().lexeme())
+                            + "|" + nonTerminal.getName()
+                            + "t:" + tables.get().lexeme());
+            currVisBlocks.push(axiom.getNextBlock(lexemesStack.peek(),tables.get().lexeme()));
+        }
+        else{
+            currVisBlocks.push(nonTerminal);
         }
     }
 

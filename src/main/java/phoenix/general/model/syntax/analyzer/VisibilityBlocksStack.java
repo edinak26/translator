@@ -31,12 +31,16 @@ public class VisibilityBlocksStack {
     public void push(NonTerminal nonTerminal) {
         boolean isTermAxiom = nonTerminal.isAxiomOf(visibilityBlocks.peek());
         boolean isTermInNewBlock =!nonTerminal.getCurrBlock().equals(visibilityBlocks.peek());
-        System.out.println(nonTerminal.getName()+"||"+isTermAxiom+"||"+visibilityBlocks.peek());
-        if (isTermAxiom)
+        if (isTermAxiom) {
             visibilityBlocks.pop();
+        }
         else if(isTermInNewBlock){
             visibilityBlocks.push(nonTerminal.getCurrBlock());
         }
+    }
+
+    public void push(String block){
+        visibilityBlocks.push(block);
     }
 
     public String pop(String block) {

@@ -80,4 +80,8 @@ public class LexemesStack implements Characters {
         }
         return lex;
     }
+
+    public String peek() {
+        return lexemes.get(lastIndex()).getName();
+    }
 }

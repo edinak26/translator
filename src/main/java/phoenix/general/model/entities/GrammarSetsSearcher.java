@@ -1,16 +1,13 @@
 package phoenix.general.model.entities;
 
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class GrammarSetsSearcher {
 
     private static Grammar grammar;
-    private Set<String> collected;
-    private Set<String> searched;
+    private Set<Terminal> collected;
+    private Set<Terminal> searched;
 
     private GrammarSetsSearcher() {
         collected = new HashSet<>();
@@ -21,157 +18,161 @@ public class GrammarSetsSearcher {
         GrammarSetsSearcher.grammar = grammar;
     }
 
-    public static Set<String> getFirstPlus(String term) {
-        return GrammarSetsSearcher.get().first(term);
+    public static Set<Terminal> getFirstPlus(NonTerminal nonTerminal) {
+        return GrammarSetsSearcher.create().collectFirstPlus(nonTerminal).get();
     }
 
-    public static Set<String> getLastPlus(String term) {
-        return GrammarSetsSearcher.get().last(term);
+    public static Set<Terminal> getLastPlus(NonTerminal nonTerminal) {
+        return GrammarSetsSearcher.create().collectLastPlus(nonTerminal).get();
     }
 
-    public static Set<String> getAfterMinus(String term, String block) {
-        return GrammarSetsSearcher.get().after(term, block);
+    public static Set<Terminal> getAfterMinus(NonTerminal nonTerminal, VisibilityBlock block) {
+        return GrammarSetsSearcher.create().after(nonTerminal, block);
     }
 
-    public static Set<String> getBeforePlus(String term, String block) {
-        return GrammarSetsSearcher.get().before(term, block);
+    public static Set<Terminal> getBeforePlus(NonTerminal nonTerminal, VisibilityBlock block) {
+        return GrammarSetsSearcher.create().before(nonTerminal, block);
     }
 
-    public static GrammarSetsSearcher get() {
+    public static GrammarSetsSearcher create() {
         return new GrammarSetsSearcher();
     }
 
-    public Set<String> first(String term) {
-        for (String ter : getFirst(term)) {
-            firstPlus(ter);
-        }
+    public Set<Terminal> get() {
         return collected;
     }
 
-    public Set<String> last(String term) {
-        for (String ter : getLast(term)) {
-            lastPlus(ter);
+    public GrammarSetsSearcher collectFirstPlus(NonTerminal nonTerminal) {
+        if (!collected.contains(nonTerminal)) {
+            collected.add(nonTerminal);
+            firstPlus(nonTerminal);
         }
+        return this;
+    }
+
+    private void firstPlus(NonTerminal nonTerminal) {
+        for (Terminal firstTerminal : getFirst(nonTerminal)) {
+            if (firstTerminal instanceof NonTerminal)
+                collectFirstPlus((NonTerminal) firstTerminal);
+            else
+                collected.add(firstTerminal);
+        }
+    }
+
+    private Set<Terminal> getFirst(NonTerminal nonTerminal) {
+        return grammar.getRightParts(nonTerminal).stream()
+                .filter(Objects::nonNull)
+                .map(rightPart -> rightPart.get(0))
+                .collect(Collectors.toSet());
+    }
+
+    public GrammarSetsSearcher collectLastPlus(NonTerminal nonTerminal) {
+        if (!collected.contains(nonTerminal)) {
+            collected.add(nonTerminal);
+            lastPlus(nonTerminal);
+        }
+        return this;
+    }
+
+    private void lastPlus(NonTerminal nonTerminal) {
+        for (Terminal lastTerminal : getLast(nonTerminal)) {
+            if (lastTerminal instanceof NonTerminal)
+                collectLastPlus((NonTerminal) lastTerminal);
+            else
+                collected.add(lastTerminal);
+        }
+
+    }
+
+    private Set<Terminal> getLast(NonTerminal nonTerminal) {
+        return grammar.getRightParts(nonTerminal).stream()
+                .filter(Objects::nonNull)
+                .map(rightPart -> rightPart.get(rightPart.size() - 1))
+                .collect(Collectors.toSet());
+    }
+
+
+    private Set<Terminal> after(Terminal terminal, VisibilityBlock block) {
+        afterFirst(terminal, block);
+        afterEquals(terminal, block);
         return collected;
     }
 
-    private void firstPlus(String term) {
-        if (!collected.contains(term)) {
-            collected.add(term);
-            for (String ter : getFirst(term)) {
-                firstPlus(ter);
-            }
+    public void afterFirst(Terminal terminal, VisibilityBlock block) {
+        for (Terminal afterTerminal : getAfter(terminal, block)) {
+            if (afterTerminal instanceof NonTerminal)
+                collected.addAll(GrammarSetsSearcher.getFirstPlus((NonTerminal) afterTerminal));
+            else
+                collected.add(afterTerminal);
         }
     }
 
-    private void lastPlus(String term) {
-        if (!collected.contains(term)) {
-            collected.add(term);
-            for (String ter : getLast(term)) {
-                lastPlus(ter);
-            }
-        }
-    }
-
-    private HashSet<String> getFirst(String term) {
-        HashSet<String> first = new HashSet<>();
-        List<List<String>> rightParts = grammar.getRightPart(term);
-        if (rightParts != null)
-            for (List<String> rightPart : rightParts) {
-                first.add(rightPart.get(0));
-            }
-        return first;
-    }
-
-    private HashSet<String> getLast(String term) {
-        HashSet<String> last = new HashSet<>();
-        List<List<String>> rightParts = grammar.getRightPart(term);
-        if (rightParts != null)
-            for (List<String> rightPart : rightParts) {
-                last.add(rightPart.get(rightPart.size() - 1));
-            }
-        return last;
-    }
-
-
-    private Set<String> after(String term, String block) {
-        afterFirst(term, block);
-        afterEquals(term, block);
-        return collected;
-    }
-
-    private Set<String> before(String term, String block) {
-        beforeLast(term, block);
-        beforeEquals(term, block);
-        return collected;
-    }
-
-    public void afterFirst(String term, String block) {
-        for (String terminal : getAfter(term, block)) {
-            if (!grammar.isNonTerminal(terminal)) {
-                collected.add(terminal);
-            }
-            collected.addAll(GrammarSetsSearcher.getFirstPlus(terminal));
-        }
-    }
-
-    public void beforeLast(String term, String block) {
-        for (String terminal : getBefore(term, block)) {
-            collected.add(terminal);
-            collected.addAll(GrammarSetsSearcher.getLastPlus(terminal));
-        }
-    }
-
-    public void afterEquals(String term, String block) {
-        if (!searched.contains(term)) {
-            searched.add(term);
-            for (NonTerminal nonTerminal : grammar.getNonTermsByEnd(term, block)) {
-                after(nonTerminal.getName(), block);
-            }
-        }
-    }
-
-    public void beforeEquals(String term, String block) {
-        if (!searched.contains(term)) {
-            searched.add(term);
-            for (NonTerminal nonTerminal : grammar.getNonTermsByStart(term, block)) {
-                before(nonTerminal.getName(), block);
-            }
-        }
-    }
-
-    public Set<String> getAfter(String term, String block) {
-        Set<String> after = new HashSet<>();
-        for (Map.Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
-            for (List<String> rightPart : entry.getValue()) {
-                for (int i = 0; i < rightPart.size() - 1; i++) {
-                    boolean isCurLexeme = rightPart.get(i).equals(term);//TODO add not null global block
-                    boolean isCurBlock = entry.getKey().getCurrBlock() != null && entry.getKey().getCurrBlock().equals(block);
-                    if (isCurLexeme && isCurBlock) {
-                        after.add(rightPart.get(i + 1));
+    public void afterEquals(Terminal terminal, VisibilityBlock block) {
+        if (!searched.contains(terminal)) {
+            searched.add(terminal);
+            for (NonTerminal nonTerminal : grammar.getNonTermsByEnd(terminal, block)) {
+                after(terminal, block);
+                if (nonTerminal.isAxiom()) {
+                    for (NonTerminal nonTer : grammar.getAllBlockNonTerminals(block)) {
+                        after(nonTer, nonTer.getBlock());
                     }
                 }
             }
         }
-        return after;
     }
 
-    public Set<String> getBefore(String term, String block) {
-        Set<String> before = new HashSet<>();
-        for (Map.Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
-            for (List<String> rightPart : entry.getValue()) {
-                for (int i = 1; i < rightPart.size(); i++) {
-                    boolean isCurLexeme = rightPart.get(i).equals(term);//TODO add not null global block
-                    boolean isCurBlock = entry.getKey().getCurrBlock() != null && entry.getKey().getCurrBlock().equals(block);
-                    if (isCurLexeme && isCurBlock) {
-                        before.add(rightPart.get(i - 1));
+    public Set<Terminal> getAfter(Terminal terminal, VisibilityBlock block) {
+        return grammar.getBlockRules(block).entrySet().stream()
+                .flatMap(e -> e.getValue().stream()
+                        .filter(rightPart -> rightPart.contains(terminal))
+                        .map(rightPart -> get(rightPart, rightPart.indexOf(terminal) + 1)))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+    }
+
+    private Set<Terminal> before(Terminal terminal, VisibilityBlock block) {
+        beforeLast(terminal, block);
+        beforeEquals(terminal, block);
+        return collected;
+    }
+
+    public void beforeLast(Terminal terminal, VisibilityBlock block) {
+        for (Terminal beforeTerminal : getBefore(terminal, block)) {
+            if (terminal instanceof NonTerminal)
+                collected.addAll(GrammarSetsSearcher.getLastPlus((NonTerminal) beforeTerminal));
+            else
+                collected.add(beforeTerminal);
+        }
+    }
+
+    public void beforeEquals(Terminal terminal, VisibilityBlock block) {
+        if (!searched.contains(terminal)) {
+            searched.add(terminal);
+            for (NonTerminal nonTerminal : grammar.getNonTermsByStart(terminal, block)) {
+                before(nonTerminal, block);
+                if (nonTerminal.isAxiom()) {
+                    for (NonTerminal nonTer : grammar.getAllBlockNonTerminals(block)) {
+                        before(nonTer, nonTer.getBlock());
                     }
                 }
             }
         }
-        return before;
     }
 
+    public Set<Terminal> getBefore(Terminal terminal, VisibilityBlock block) {//TODO getBefore and gerAfter are so similar
+        return grammar.getBlockRules(block).entrySet().stream()
+                .flatMap(e -> e.getValue().stream()
+                        .filter(rightPart -> rightPart.contains(terminal))
+                        .map(rightPart -> get(rightPart, rightPart.indexOf(terminal) - 1)))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+    }
 
+    private Terminal get(List<Terminal> terminals, int index) {
+        if (index < 0 || index >= terminals.size()) {
+            return null;
+        } else
+            return terminals.get(index);
+    }
 }
 

@@ -2,6 +2,7 @@ package phoenix.general.model.syntax.analyzer;
 
 import phoenix.general.model.entities.Grammar;
 import phoenix.general.model.entities.NonTerminal;
+import phoenix.general.model.entities.VisibilityBlock;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Stack;
 
 public class VisibilityBlocksStack {
-    private Stack<String> visibilityBlocks;
+    private Stack<VisibilityBlock> visibilityBlocks;
     private Grammar grammar;
 
     VisibilityBlocksStack(Grammar grammar) {
@@ -18,12 +19,12 @@ public class VisibilityBlocksStack {
         visibilityBlocks.push(grammar.getStartVisibilityBlocks());
     }
 
-    public String getCurrentBlock() {
+    public VisibilityBlock getCurrentBlock() {
         return visibilityBlocks.peek();
     }
 
-    public Stack<String> getBlocks() {
-        Stack<String> blocks = new Stack<>();
+    public Stack<VisibilityBlock> getBlocks() {
+        Stack<VisibilityBlock> blocks = new Stack<>();
         blocks.addAll(visibilityBlocks);
         return blocks;
     }

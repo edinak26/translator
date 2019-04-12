@@ -1,18 +1,16 @@
 package phoenix.general.model.entities;
 
-import phoenix.general.interfaces.MetaLanguage;
 import phoenix.general.interfaces.Patterns;
-import phoenix.general.model.syntax.analyzer.SetsSearcher;
 
 import java.util.*;
 import java.util.regex.Matcher;
 
 public class GrammarConstructor implements Patterns {
     private Grammar resGrammar;
-    private Map<NonTerminal, List<List<String>>> grammar;
+    private Map<NonTerminal, List<List<Terminal>>> grammar;
     private List<List<String>> splitText;
-    private Stack<String> visibilityBlocks;
-    private boolean isAxiom = false;
+    private Stack<VisibilityBlock> visibilityBlocks;
+    private boolean isBlockAxiom = false;
 
     private GrammarConstructor(List<List<String>> splitText) {
         grammar = new LinkedHashMap<>();
@@ -46,26 +44,24 @@ public class GrammarConstructor implements Patterns {
         }
     }
 
+
     private void saveAxioms() {
+        resGrammar.setAxiom(resGrammar.getNonTerminal(splitText.get(0).get(0)));
+
         Set<NonTerminal> nonTerminals= new HashSet<>(grammar.keySet());
         for (NonTerminal nonTerminal : nonTerminals) {
             if (nonTerminal.isAxiom()) {
-                convertToAxiom(nonTerminal);
+                convertToBlockAxiom(nonTerminal);
             }
         }
-
     }
 
-    private void convertToAxiom(NonTerminal nonTerminal) {
-        Axiom axiom = new Axiom(nonTerminal);
+    private void convertToBlockAxiom(NonTerminal nonTerminal) {
         for (String block : resGrammar.getUniqueBlocks()) {
-            Set<String> after = GrammarSetsSearcher.getAfterMinus(nonTerminal.getName(), block);
-            Set<String> before = GrammarSetsSearcher.getBeforePlus(nonTerminal.getName(), block);
-            axiom.addSets(block, after, before);
+            Set<String> after = GrammarSetsSearcher.getAfterMinus(nonTerminal, block);
+            Set<String> before = GrammarSetsSearcher.getBeforePlus(nonTerminal, block);
+            nonTerminal.addSets(block, after, before);
         }
-        axiom.check();
-        grammar.put(axiom, grammar.get(nonTerminal));
-        grammar.remove(nonTerminal);
     }
 
 

@@ -56,9 +56,9 @@ public class LexemesStack implements Characters {
     }
 
     private List<String> createLastRightPart() {
-
         List<String> rightPart = new ArrayList<>();
-        for (LexemeRelation lexeme : this.lexemes) {
+        List<LexemeRelation> lexs = new ArrayList<>(this.lexemes);
+        for (LexemeRelation lexeme : lexs) {
             rightPart.add(lexeme.getName());
             lexemes.remove(0);
             if (lexeme.getLastRelation().equals(RELATION_LESS)) {

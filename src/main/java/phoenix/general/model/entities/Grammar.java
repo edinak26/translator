@@ -2,101 +2,62 @@ package phoenix.general.model.entities;
 
 import phoenix.general.interfaces.MetaLanguage;
 import phoenix.general.model.syntax.analyzer.RelationsTable;
-import phoenix.general.model.syntax.analyzer.SetsSearcher;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public class Grammar implements MetaLanguage {
-    private Map<NonTerminal, List<List<String>>> grammar;
+    private Map<NonTerminal, List<List<Terminal>>> grammar;
+    private NonTerminal grammarAxiom;
 
-    public Grammar(Map<NonTerminal, List<List<String>>> grammar) {
+    public Grammar(Map<NonTerminal, List<List<Terminal>>> grammar) {
         this.grammar = grammar;
-        SetsSearcher.setGrammar(this);//TODO delete old searcher
         GrammarSetsSearcher.setGrammar(this);
     }
 
-    public NonTerminal getBlockNonTerminal(List<String> rightPart, String currVisibilityBlock) {
-        NonTerminal result = null;
-        for (Entry<NonTerminal, List<List<String>>> grammarEntry : grammar.entrySet()) {
-            for (List<String> grammarRightPart : grammarEntry.getValue()) {
-                boolean hasVisibilityBlock = grammarEntry.getKey().getCurrBlock() != null;
-                if (hasVisibilityBlock) {
-                    boolean isCurrVisibilityBlock = grammarEntry.getKey().getCurrBlock().equals(currVisibilityBlock);
-                    boolean isNonTerminalFound = rightPart.equals(grammarRightPart);
-                    if (isCurrVisibilityBlock && isNonTerminalFound) {
-                        checkUniqueness(result, rightPart);
-                        result = grammarEntry.getKey();
-                    }
-                }
-            }
+    public void setAxiom(NonTerminal axiom) {
+        this.grammarAxiom = axiom;
+    }
+
+    public boolean isAxiom(NonTerminal nonTerminal) {
+        return nonTerminal.equals(grammarAxiom);
+    }
+
+    public Map<NonTerminal, List<List<Terminal>>> getBlockRules(VisibilityBlock block) {
+        return grammar.entrySet().stream()
+                .filter(rule -> rule.getKey().isInBlock(block))
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+    }
+
+    public Set<NonTerminal> getAllBlockNonTerminals(VisibilityBlock block){
+        return getBlockRules(block).keySet();
+    }
+
+    public Set<NonTerminal> getBlockNonTerminals(List<Terminal> rightPart, VisibilityBlock block) {
+        Set<NonTerminal> result = getBlockRules(block).entrySet().stream()
+                .filter(rule -> rule.getValue().stream()
+                                .anyMatch(right -> right.equals(rightPart)))
+                .map(Entry::getKey)
+                .collect(Collectors.toSet());
+        if (result.isEmpty()) {
+            throw new RuntimeException("Exception: non terminal not found in block " + block + " for " + rightPart);
         }
         return result;
     }
 
-    public NonTerminal getGlobalNonTerminal(List<String> rightPart) {
-        NonTerminal result = null;
-        for (Entry<NonTerminal, List<List<String>>> grammarEntry : grammar.entrySet()) {
-            for (List<String> grammarRightPart : grammarEntry.getValue()) {
-                if (rightPart.equals(grammarRightPart)) {
-                    checkUniqueness(result, rightPart);
-                    result = grammarEntry.getKey();
-                }
-            }
-        }
-        checkResult(result, rightPart);
-        return result;
+    public List<List<Terminal>> getRightParts(NonTerminal nonTerminal) {
+        return grammar.entrySet().stream()
+                .filter(e->e.getKey().equals(nonTerminal))
+                .map(Entry::getValue).findFirst()
+                .orElse(null);
     }
 
-    private void checkUniqueness(NonTerminal result, List<String> rightPart) {
-        if (result != null)
-            throw new RuntimeException(
-                    "Un correct grammar, right part:"
-                            + rightPart.toString()
-                            + " has more then one replace"
-                            + "\n second non terminal is:" + result.getName());
-    }
-
-    private void checkResult(NonTerminal result, List<String> rightPart) {
-        if (result == null)
-            throw new RuntimeException("Non terminal is not found for:" + rightPart.toString());
-    }
-
-    public NonTerminal getNonTerminal(List<String> rightPart, String currVisibilityBlock) {
-        NonTerminal res = null;
-        int counter = 0;
-        for (Entry<NonTerminal, List<List<String>>> grammarEntry : grammar.entrySet()) {
-            for (List<String> grammarRightPart : grammarEntry.getValue()) {
-                if (rightPart.equals(grammarRightPart)) {
-                    counter++;
-                    res = grammarEntry.getKey();
-                }
-            }
-        }
-
-        if (counter > 1) {
-            counter = 0;
-            for (Entry<NonTerminal, List<List<String>>> grammarEntry : grammar.entrySet()) {
-                for (List<String> grammarRightPart : grammarEntry.getValue()) {
-                    if (rightPart.equals(grammarRightPart) && grammarEntry.getKey().getCurrBlock().equals(currVisibilityBlock)) {
-                        counter++;
-                        res = grammarEntry.getKey();
-                    }
-                }
-            }
-            if (counter > 1)
-                throw new RuntimeException("Un correct grammar, right part:" + rightPart.toString() + " has more then one replace");
-        }
-        return res;
-    }
-
-    public List<List<String>> getRightPart(String nonTerminal) {
-        for (Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
-            if (entry.getKey().getName().equals(nonTerminal)) {
-                return entry.getValue();
-            }
-        }
-        return null;
+    public NonTerminal getNonTerminal(String name) {
+        return grammar.keySet().stream()
+                .filter(ter -> ter.getName().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     public List<String> getUniqueTerminals() {
@@ -106,9 +67,11 @@ public class Grammar implements MetaLanguage {
             terminals.add(nonTerminal.getName());
         }
 
-        for (List<List<String>> rightParts : grammar.values()) {
-            for (List<String> rightPart : rightParts) {
-                terminals.addAll(rightPart);
+        for (List<List<Terminal>> rightParts : grammar.values()) {
+            for (List<Terminal> rightPart : rightParts) {
+                for(Terminal terminal: rightPart)
+                terminals.add(terminal.getName());
+
             }
         }
 
@@ -117,13 +80,13 @@ public class Grammar implements MetaLanguage {
 
 
     public void configRelations(RelationsTable relations) {
-        for (Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
-            for (List<String> rightPart : entry.getValue()) {
+        for (Entry<NonTerminal, List<List<Terminal>>> entry : grammar.entrySet()) {
+            for (List<Terminal> rightPart : entry.getValue()) {
                 for (int i = 0; i < rightPart.size() - 1; i++) {
-                    String currTerminal = rightPart.get(i);
-                    String nextTerminal = rightPart.get(i + 1);
-                    Set<String> curLast = SetsSearcher.get().last(currTerminal);
-                    Set<String> nextFirst = SetsSearcher.get().first(nextTerminal);
+                    Terminal currTerminal = rightPart.get(i);
+                    Terminal nextTerminal = rightPart.get(i + 1);
+                    Set<Terminal> curLast = GrammarSetsSearcher.getLastPlus(currTerminal);
+                    Set<Terminal> nextFirst = GrammarSetsSearcher.getFirstPlus(nextTerminal);
 
                     relations.setEqualRel(currTerminal, nextTerminal);
                     relations.setMoreRel(curLast, nextTerminal);
@@ -134,29 +97,11 @@ public class Grammar implements MetaLanguage {
         }
     }
 
-    public void show() {
-        for (Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
-            System.out.print(entry.getKey().getName() + GRAMMAR_EQUAL);
-            for (List<String> rightPart : entry.getValue()) {
-                for (String elem : rightPart) {
-                    System.out.print(elem);
-                }
-                System.out.print(GRAMMAR_OR);
-            }
-            System.out.println();
-        }
+    public VisibilityBlock getStartVisibilityBlocks() {
+        return grammarAxiom.getBlock();
     }
 
-    public String getStartVisibilityBlocks() {
-        for (NonTerminal nonTerminal : grammar.keySet()) {
-            if (nonTerminal.getCurrBlock() != null) {
-                return nonTerminal.getCurrBlock();
-            }
-        }
-        return null;
-    }
-
-    public Iterable<? extends Entry<NonTerminal, List<List<String>>>> entrySet() {
+    public Set<Entry<NonTerminal, List<List<Terminal>>>> entrySet() {
         return grammar.entrySet();
     }
 
@@ -169,40 +114,23 @@ public class Grammar implements MetaLanguage {
         return false;
     }
 
-    public Set<NonTerminal> getNonTermsByEnd(String term, String block) {
-        Set<NonTerminal> nonTerminals = new HashSet<>();
-        for (Map.Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
-            for (List<String> rightPart : entry.getValue()) {
-                boolean isTermEnd = term.equals(rightPart.get(rightPart.size() - 1));
-                boolean isBlock = entry.getKey().getCurrBlock() != null && entry.getKey().getCurrBlock().equals(block);
-                if (isTermEnd && isBlock) {
-                    nonTerminals.add(entry.getKey());
-                }
-            }
-        }
-        return nonTerminals;
+    public Set<NonTerminal> getNonTermsByEnd(Terminal terminal, VisibilityBlock block) {
+        return getBlockNonTerminals(Collections.singletonList(terminal),block).stream()
+                .filter(nonTerminal -> grammar.get(nonTerminal).stream()
+                        .anyMatch(rightPart->rightPart.get(rightPart.size()-1).equals(terminal)))
+                .collect(Collectors.toSet());
     }
 
-    public Set<NonTerminal> getNonTermsByStart(String term, String block) {
-        Set<NonTerminal> nonTerminals = new HashSet<>();
-        for (Map.Entry<NonTerminal, List<List<String>>> entry : grammar.entrySet()) {
-            for (List<String> rightPart : entry.getValue()) {
-                boolean isTermStart = term.equals(rightPart.get(0));
-                boolean isBlock = entry.getKey().getCurrBlock() != null && entry.getKey().getCurrBlock().equals(block);
-                if (isTermStart && isBlock) {
-                    nonTerminals.add(entry.getKey());
-                }
-            }
-        }
-        return nonTerminals;
+    public Set<NonTerminal> getNonTermsByStart(Terminal terminal, VisibilityBlock block) {
+        return getBlockNonTerminals(Collections.singletonList(terminal),block).stream()
+                .filter(nonTerminal -> grammar.get(nonTerminal).stream()
+                        .anyMatch(rightPart->rightPart.get(0).equals(terminal)))
+                .collect(Collectors.toSet());
     }
 
-    public Set<String> getUniqueBlocks() {
-        Set<String> blocks = new HashSet<>();
-        for(NonTerminal nonTerminal :grammar.keySet()){
-            if(nonTerminal.getCurrBlock()!=null)//TODO add global block
-            blocks.add(nonTerminal.getCurrBlock());
-        }
-        return blocks;
+    public Set<VisibilityBlock> getUniqueBlocks() {
+        return grammar.keySet().stream()
+                .map(NonTerminal::getBlock)
+                .collect(Collectors.toSet());
     }
 }

@@ -34,7 +34,6 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
     public void analyze() {
         while (tables.hasNext()) {
             tables.goNext();
-            System.out.println("@" + lexemesStack.getLastLexemeName());
             setRelation();
             logStatus();
             saveTableLexeme();
@@ -70,7 +69,7 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
 
         } else if (currRelation.equals(RELATION_MORE)) {
             List<String> rightPart = lexemesStack.popLastRightPart();
-
+            Collections.reverse(rightPart);
             NonTerminal nonTerminal = getNonTerminal(rightPart);
             checkAxiom(nonTerminal);
             lexemesStack.push(
@@ -84,13 +83,12 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
     private void checkAxiom(NonTerminal nonTerminal) {
         boolean isAxiom = nonTerminal.isAxiom();
         boolean isCurrAxiom = nonTerminal.isAxiomOf(currVisBlocks.getCurrentBlock());
-        boolean isNewBlock = !nonTerminal.getCurrBlock().equals(currVisBlocks.getCurrentBlock());
         if (isAxiom) {
             if (isCurrAxiom) {
                 currVisBlocks.pop();
             } else {
                 Axiom axiom = (Axiom) nonTerminal;
-                axiom.getNextBlock(lexemesStack.peek(), tables.get().lexeme(), currVisBlocks.getCurrentBlock());
+                boolean isNewBlock = !axiom.getNextBlock(lexemesStack.peek(), tables.get().lexeme(), currVisBlocks.getCurrentBlock()).equals(currVisBlocks.getCurrentBlock());
                 if (isNewBlock)
                     currVisBlocks.push(axiom.getNextBlock(lexemesStack.peek(), tables.get().lexeme(), currVisBlocks.getCurrentBlock()));
             }
@@ -99,14 +97,18 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
 
     private NonTerminal getNonTerminal(List<String> rightPart) {
         NonTerminal nonTerminal = null;
-        Stack<String> currBlocks = currVisBlocks.getBlocks();
+        Stack<VisibilityBlock> currBlocks = currVisBlocks.getBlocks();
         while (nonTerminal == null) {
+            System.out.println(currVisBlocks.getBlocks());
             if (!currBlocks.empty()) {
                 //TODO think about refactor grammar class
                 // and add both to one method getNonTerminal
-                nonTerminal = grammar.getBlockNonTerminal(rightPart, currBlocks.pop());
+                System.out.println("+");
+                nonTerminal = grammar.getBlockNonTerminals(rightPart, currBlocks.pop());
             } else {
-                nonTerminal = grammar.getGlobalNonTerminal(rightPart);
+
+                System.out.println("-");
+                nonTerminal = grammar.getNonTerInComplexBlock(rightPart,"").get(0);
             }
         }
         checkNonTerminal(nonTerminal, rightPart);

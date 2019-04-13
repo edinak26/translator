@@ -18,12 +18,18 @@ public class GrammarSetsSearcher {
         GrammarSetsSearcher.grammar = grammar;
     }
 
-    public static Set<Terminal> getFirstPlus(NonTerminal nonTerminal) {
-        return GrammarSetsSearcher.create().collectFirstPlus(nonTerminal).get();
+    public static Set<Terminal> getFirstPlus(Terminal terminal) {
+        if (terminal instanceof NonTerminal)
+            return GrammarSetsSearcher.create().collectFirstPlus((NonTerminal) terminal).get();
+        else
+            return new HashSet<>(Collections.singleton(terminal));
     }
 
-    public static Set<Terminal> getLastPlus(NonTerminal nonTerminal) {
-        return GrammarSetsSearcher.create().collectLastPlus(nonTerminal).get();
+    public static Set<Terminal> getLastPlus(Terminal terminal) {
+        if (terminal instanceof NonTerminal)
+            return GrammarSetsSearcher.create().collectLastPlus((NonTerminal) terminal).get();
+        else
+            return new HashSet<>(Collections.singleton(terminal));
     }
 
     public static Set<Terminal> getAfterMinus(NonTerminal nonTerminal, VisibilityBlock block) {

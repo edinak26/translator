@@ -4,13 +4,14 @@ import phoenix.general.interfaces.Patterns;
 
 import java.util.*;
 import java.util.regex.Matcher;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class GrammarConstructor implements Patterns {
-    private Grammar resGrammar;
+    private Grammar resultGrammar;
     private Map<NonTerminal, List<List<Terminal>>> grammar;
     private List<List<String>> splitText;
     private Stack<VisibilityBlock> visibilityBlocks;
-    private boolean isBlockAxiom = false;
 
     private GrammarConstructor(List<List<String>> splitText) {
         grammar = new LinkedHashMap<>();
@@ -18,23 +19,27 @@ public class GrammarConstructor implements Patterns {
         visibilityBlocks = new Stack<>();
     }
 
-    public static Grammar getGrammar(List<List<String>> splitText) {
-        GrammarConstructor constructor = new GrammarConstructor(splitText);
-        constructor.convert();
-        return constructor.resGrammar;
+    public static Grammar construct(List<List<String>> splitText) {
+        return GrammarConstructor.create(splitText).convert();
     }
 
-    private void convert() {
+    private static GrammarConstructor create(List<List<String>> splitText) {
+        return new GrammarConstructor(splitText);
+    }
+
+    private Grammar convert() {
         convertSplitText();
-        resGrammar = new Grammar(grammar);
-        saveAxioms();
+        createGrammar();
+        convertTerminals();
+        convertAxioms();
+        return resultGrammar;
     }
 
     private void convertSplitText() {
         for (List<String> line : splitText) {
             String first = line.get(0);
             if (isNonTerminal(first)) {
-                addNonTerminal(line);
+                addRule(line);
             } else if (isVisibilityOpenBlock(first)) {
                 addVisibilityBlock(first);
             } else if (isVisibilityCloseBlock(first)) {
@@ -44,57 +49,89 @@ public class GrammarConstructor implements Patterns {
         }
     }
 
+    private void createGrammar() {
+        resultGrammar = new Grammar(grammar);
+    }
 
-    private void saveAxioms() {
-        resGrammar.setAxiom(resGrammar.getNonTerminal(splitText.get(0).get(0)));
-
-        Set<NonTerminal> nonTerminals= new HashSet<>(grammar.keySet());
+    private void convertTerminals() {
+        Set<NonTerminal> nonTerminals = new LinkedHashSet<>(grammar.keySet());
         for (NonTerminal nonTerminal : nonTerminals) {
-            if (nonTerminal.isAxiom()) {
-                convertToBlockAxiom(nonTerminal);
-            }
+                List<List<Terminal>> convertRightPart = grammar.get(nonTerminal).stream()
+                        .map(rightPart -> rightPart.stream()
+                                .map(terminal ->
+                                        isNonTerminal(terminal) ? createNonTerminal(terminal) : terminal)
+                                .collect(Collectors.toList()))
+                        .collect(Collectors.toList());
+                grammar.replace(nonTerminal, convertRightPart);
         }
     }
 
-    private void convertToBlockAxiom(NonTerminal nonTerminal) {
-        for (String block : resGrammar.getUniqueBlocks()) {
-            Set<String> after = GrammarSetsSearcher.getAfterMinus(nonTerminal, block);
-            Set<String> before = GrammarSetsSearcher.getBeforePlus(nonTerminal, block);
+    private void convertAxioms(){
+        grammar.keySet().forEach(nonTerminal -> {
+            if(isAxiom(nonTerminal)){
+                convertAxiom(nonTerminal);
+            }
+        });
+    }
+
+    private boolean isNonTerminal(Terminal terminal) {
+        return resultGrammar.getAllNonTerminals().stream()
+                .anyMatch(nonTerminal -> nonTerminal.equals(terminal));
+    }
+
+    private void addRule(List<String> line) {
+        NonTerminal nonTerminal = createNonTerminal(line.remove(0));
+        List<List<Terminal>> rightPart = convertRightPart(line);
+        grammar.put(nonTerminal, rightPart);
+        checkVisibilityBlockAxiom(nonTerminal);
+    }
+
+    private void checkVisibilityBlockAxiom (NonTerminal nonTerminal){
+        if(!visibilityBlocks.peek().hasAxiom()){
+            visibilityBlocks.peek().axiom(nonTerminal);
+        }
+    }
+
+    private NonTerminal createNonTerminal(String name) {
+        return new NonTerminal(name, visibilityBlocks);
+    }
+
+    private boolean isAxiom(NonTerminal nonTerminal){
+        return visibilityBlocks.stream()
+                .anyMatch(block->block.getAxiom().equals(nonTerminal));
+    }
+
+    private NonTerminal createNonTerminal(Terminal terminal){
+        return resultGrammar.getAllNonTerminals().stream()
+                .filter(nonTerminal -> nonTerminal.equals(terminal))
+                .findAny().orElse(null);
+    }
+
+    private void convertAxiom(NonTerminal nonTerminal) {
+        for (VisibilityBlock block : resultGrammar.getUniqueBlocks()) {
+            Set<Terminal> after = GrammarSetsSearcher.getAfterMinus(nonTerminal, block);
+            Set<Terminal> before = GrammarSetsSearcher.getBeforePlus(nonTerminal, block);
             nonTerminal.addSets(block, after, before);
         }
     }
 
-
-    private void addNonTerminal(List<String> line) {
-        ArrayList<String> rightPart = new ArrayList<>(line);
-        NonTerminal nonTerminal = new NonTerminal(rightPart.remove(0));
-        nonTerminal.setBlocks(visibilityBlocks);
-        setAxiom(nonTerminal);
-        grammar.put(nonTerminal, splitLine(rightPart));
-    }
-
-    private void setAxiom(NonTerminal nonTerminal) {
-        nonTerminal.setAxiom(isAxiom);
-        if (isAxiom)
-            isAxiom = false;
-    }
-
-    private List<List<String>> splitLine(List<String> line) {
-        List<List<String>> splitLine = new ArrayList<>();
-        splitLine.add(new ArrayList<>());
-        for (String elem : line) {
-            if (elem.equals(GRAMMAR_OR)) {
-                splitLine.add(new ArrayList<>());
+    private List<List<Terminal>> convertRightPart(List<String> line) {
+        List<List<Terminal>> rightPart = new ArrayList<>();
+        rightPart.add(new ArrayList<>());
+        for (String lexeme : line) {//TODO add in DIVIDER lines split
+            if (lexeme.equals(GRAMMAR_OR)) {
+                rightPart.add(new ArrayList<>());
             } else {
-                splitLine.get(splitLine.size() - 1).add(elem);
+                rightPart.get(rightPart.size() - 1).add(Terminal.create(lexeme));
             }
         }
-        return splitLine;
+        return rightPart;
     }
 
-    private void addVisibilityBlock(String block) {
+    private void addVisibilityBlock(String line) {
+        VisibilityBlock block = new VisibilityBlock(line);
+        visibilityBlocks.peek().addChild(block);
         visibilityBlocks.push(block);
-        isAxiom = true;
     }
 
     private void removeVisibilityBlock() {

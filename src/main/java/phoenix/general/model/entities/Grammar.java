@@ -97,6 +97,10 @@ public class Grammar implements MetaLanguage {
         }
     }
 
+    public Set<NonTerminal> getAllNonTerminals(){
+        return grammar.keySet();
+    }
+
     public VisibilityBlock getStartVisibilityBlocks() {
         return grammarAxiom.getBlock();
     }

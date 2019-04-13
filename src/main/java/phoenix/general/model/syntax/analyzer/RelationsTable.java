@@ -3,6 +3,7 @@ package phoenix.general.model.syntax.analyzer;
 import phoenix.accessory.constant.Characters;
 import phoenix.general.model.entities.Grammar;
 import phoenix.general.model.entities.GrammarConstructor;
+import phoenix.general.model.entities.Terminal;
 import phoenix.general.model.reader.TextReader;
 
 import java.util.*;
@@ -18,7 +19,7 @@ public class RelationsTable implements Characters {
     private static final String STRAT_GRAM_PATH = "D:\\University\\Java\\translator\\src\\main\\java\\phoenix\\accessory\\info\\stratGram";
 
     public RelationsTable() throws Exception {
-        this.grammar = GrammarConstructor.getGrammar(TextReader
+        this.grammar = GrammarConstructor.construct(TextReader
                 .grammar()
                 .setPath(STRAT_GRAM_PATH)
                 .get());
@@ -38,51 +39,51 @@ public class RelationsTable implements Characters {
         uniqueTerminals.add("#");
     }
 
-    public void setEqualRel(String ter1, String ter2) {
-        if (relations[uniqueTerminals.indexOf(ter1)][uniqueTerminals.indexOf(ter2)] != null && !relations[uniqueTerminals.indexOf(ter1)][uniqueTerminals.indexOf(ter2)].equals(RELATION_EQUALITY)) {
+    public void setEqualRel(Terminal ter1, Terminal ter2) {
+        if (relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter2.getName())] != null && !relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter2.getName())].equals(RELATION_EQUALITY)) {
             log.log(Level.INFO,
-                    "Rewrite( " + ter1 + " | " + ter2 + " ) from " + relations[uniqueTerminals.indexOf(ter1)][uniqueTerminals.indexOf(ter2)] + " to =");
+                    "Rewrite( " + ter1 + " | " + ter2 + " ) from " + relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter2.getName())] + " to =");
         }
-        relations[uniqueTerminals.indexOf(ter1)][uniqueTerminals.indexOf(ter2)] = RELATION_EQUALITY;
+        relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter1.getName())] = RELATION_EQUALITY;
     }
 
-    private void setMoreRel(String ter1, String ter2) {
-        if (relations[uniqueTerminals.indexOf(ter1)][uniqueTerminals.indexOf(ter2)] != null && !relations[uniqueTerminals.indexOf(ter1)][uniqueTerminals.indexOf(ter2)].equals(RELATION_MORE)) {
+    private void setMoreRel(Terminal ter1, Terminal ter2) {
+        if (relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter2.getName())] != null && !relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter2.getName())].equals(RELATION_MORE)) {
             log.log(Level.INFO,
-                    "Rewrite( " + ter1 + " | " + ter2 + " ) from " + relations[uniqueTerminals.indexOf(ter1)][uniqueTerminals.indexOf(ter2)] + " to >");
+                    "Rewrite( " + ter1.getName() + " | " + ter2.getName() + " ) from " + relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter2.getName())] + " to >");
 
         }
-        relations[uniqueTerminals.indexOf(ter1)][uniqueTerminals.indexOf(ter2)] = RELATION_MORE;
+        relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter2.getName())] = RELATION_MORE;
     }
 
-    public void setMoreRel(Set<String> lastPlus, String ter) {
-        for (String term : lastPlus) {
+    public void setMoreRel(Set<Terminal> lastPlus, Terminal ter) {
+        for (Terminal term : lastPlus) {
             setMoreRel(term, ter);
         }
     }
 
-    public void setMoreRel(Set<String> lastPlus, Set<String> firstPlus) {
-        for (String term : firstPlus) {
+    public void setMoreRel(Set<Terminal> lastPlus, Set<Terminal> firstPlus) {
+        for (Terminal term : firstPlus) {
             setMoreRel(lastPlus, term);
         }
     }
 
-    private void setLessRel(String ter1, String ter2) {
-        if (relations[uniqueTerminals.indexOf(ter1)][uniqueTerminals.indexOf(ter2)] != null && !relations[uniqueTerminals.indexOf(ter1)][uniqueTerminals.indexOf(ter2)].equals(RELATION_LESS)) {
+    private void setLessRel(Terminal ter1, Terminal ter2) {
+        if (relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter2.getName())] != null && !relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter2.getName())].equals(RELATION_LESS)) {
             log.log(Level.INFO,
-                    "Rewrite( " + ter1 + " | " + ter2 + " ) from " + relations[uniqueTerminals.indexOf(ter1)][uniqueTerminals.indexOf(ter2)] + " to <");
+                    "Rewrite( " + ter1.getName() + " | " + ter2.getName() + " ) from " + relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter2.getName())] + " to <");
         }
-        relations[uniqueTerminals.indexOf(ter1)][uniqueTerminals.indexOf(ter2)] = RELATION_LESS;
+        relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter2.getName())] = RELATION_LESS;
     }
 
-    public void setLessRel(String ter, Set<String> firstPlus) {
-        for (String term : firstPlus) {
+    public void setLessRel(Terminal ter, Set<Terminal> firstPlus) {
+        for (Terminal term : firstPlus) {
             setLessRel(ter, term);
         }
     }
 
-    public String getRelation(String term1, String term2) {
-        return relations[uniqueTerminals.indexOf(term1)][uniqueTerminals.indexOf(term2)];
+    public String getRelation(Terminal term1, Terminal term2) {
+        return relations[uniqueTerminals.indexOf(term1.getName())][uniqueTerminals.indexOf(term2.getName())];
     }
 
     public String[][] getRelations() {

@@ -6,6 +6,10 @@ public class Terminal {
         this.name = name;
     }
 
+    public static Terminal create(String name){
+        return new Terminal(name);
+    }
+
     public String getName() {
         return name;
     }

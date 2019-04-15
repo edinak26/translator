@@ -24,7 +24,7 @@ public class NonTerminal extends Terminal implements MetaLanguage {
         return blocks.get(0);
     }
 
-    public boolean isInBlock(VisibilityBlock block){
+    public boolean isInBlock(VisibilityBlock block) {
         return blocks.contains(block);
     }
 
@@ -44,20 +44,28 @@ public class NonTerminal extends Terminal implements MetaLanguage {
         this.sets.put(block, sets);
     }
 
-    public VisibilityBlock getNextBlock(Terminal lastLex, Terminal nextLex, String currBlock) {
+    public VisibilityBlock nextBlock(Terminal lastLex, Terminal nextLex, String currBlock) {
+        if (sets == null) {
+            return getBlock();
+        }
+        return getNextBlock(lastLex, nextLex, currBlock);
+
+    }
+
+    private VisibilityBlock getNextBlock(Terminal lastLex, Terminal nextLex, String currBlock) {
         List<VisibilityBlock> resultAfter = sets.entrySet().stream()
-                .filter(e-> e.getValue()[0].contains(nextLex))
+                .filter(e -> e.getValue()[0].contains(nextLex))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
         List<VisibilityBlock> resultBefore = sets.entrySet().stream()
-                .filter(e-> e.getValue()[1].contains(lastLex))
+                .filter(e -> e.getValue()[1].contains(lastLex))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
         resultAfter.retainAll(resultBefore);
 
-        if(resultAfter.size()!=1){
+        if (resultAfter.size() != 1) {
             System.out.println("ERRROR: UNCORRECT GRAMMAR");
         }
 

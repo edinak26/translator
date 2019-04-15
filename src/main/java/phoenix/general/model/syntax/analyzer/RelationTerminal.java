@@ -1,29 +1,31 @@
 package phoenix.general.model.syntax.analyzer;
 
 import phoenix.general.interfaces.SyntaxConstants;
+import phoenix.general.model.entities.Terminal;
 import phoenix.general.model.lexical.analyzer.LexemesTableElement;
 
-public class LexemeRelation implements SyntaxConstants {
-    private String name;
+public class RelationTerminal implements SyntaxConstants {
+    private Terminal terminal;
     private String lastRelation;
 
-    public LexemeRelation(LexemesTableElement tableElement, String lastRelation){
-        name=tableElement.lexeme();
+    public RelationTerminal(LexemesTableElement tableElement, String lastRelation){
+        terminal=new Terminal(tableElement.lexeme());
         this.lastRelation=lastRelation;
     }
 
-    public LexemeRelation(String name, String lastRelation){
-        this.name=name;
+    public RelationTerminal(Terminal terminal, String lastRelation){
+        this.terminal=terminal;
         checkRelation(lastRelation);
         this.lastRelation=lastRelation;
     }
 
-    public LexemeRelation(){
-        name=DEFAULT_RELATION_LEXEME;
+    public RelationTerminal(){
+        terminal=new Terminal(DEFAULT_TERMINAL);
         lastRelation = null;
     }
-    public String getName(){
-        return name;
+
+    public Terminal getTerminal(){
+        return terminal;
     }
 
     public String getLastRelation(){

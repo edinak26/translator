@@ -34,15 +34,15 @@ public class Grammar implements MetaLanguage {
         return getBlockRules(block).keySet();
     }
 
-    public Set<NonTerminal> getBlockNonTerminals(List<Terminal> rightPart, VisibilityBlock block) {
-        Set<NonTerminal> result = getBlockRules(block).entrySet().stream()
+    public List<NonTerminal> getBlockNonTerminals(List<Terminal> rightPart, VisibilityBlock block) {
+        List<NonTerminal> result = getBlockRules(block).entrySet().stream()
                 .filter(rule -> rule.getValue().stream()
                                 .anyMatch(right -> right.equals(rightPart)))
                 .map(Entry::getKey)
-                .collect(Collectors.toSet());
-        if (result.isEmpty()) {
+                .collect(Collectors.toList());
+        /*if (result.isEmpty()) {
             throw new RuntimeException("Exception: non terminal not found in block " + block + " for " + rightPart);
-        }
+        }*/
         return result;
     }
 

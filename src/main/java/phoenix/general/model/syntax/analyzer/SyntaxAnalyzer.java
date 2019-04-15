@@ -12,10 +12,9 @@ import java.util.*;
 
 public class SyntaxAnalyzer implements Characters, MetaLanguage {
     private static final Logger logger = LogManager.getLogger(Messages.class.getName());
-
-
-    private LexemesStack lexemesStack;
+    private RelationTerminalsStack lexemesStack;
     private TablesManager tables;
+    private TerminalsTable inputTerminals;
     Grammar grammar;
     RelationsTable relationsTable;
     private static final String STRAT_GRAM_PATH = "D:\\University\\Java\\translator\\src\\main\\java\\phoenix\\accessory\\info\\stratGram";
@@ -23,10 +22,11 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
     private String currRelation;
 
     public SyntaxAnalyzer(TablesManager tables) throws Exception {
-        lexemesStack = new LexemesStack();
+        inputTerminals = new TerminalsTable(tables);
+        lexemesStack = new RelationTerminalsStack();
         this.tables = tables;
         relationsTable = new RelationsTable();
-        grammar = GrammarConstructor.getGrammar(TextReader.grammar().setPath(STRAT_GRAM_PATH).get());
+        grammar = GrammarConstructor.construct(TextReader.grammar().setPath(STRAT_GRAM_PATH).get());
         currVisBlocks = new VisibilityBlocksStack(grammar);
         GrammarSetsSearcher.setGrammar(grammar);
     }
@@ -41,13 +41,10 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
     }
 
     private void setRelation() {
-        currRelation = getRelation(lexemesStack.getLastLexemeName(), tables.get().lexeme());
+        currRelation = relationsTable.getRelation(lexemesStack.peek(),inputTerminals.peek());
         checkRelation(currRelation);
     }
 
-    private String getRelation(String lex1, String lex2) {
-        return relationsTable.getRelation(lex1, lex2);
-    }
 
     private void checkRelation(String relation) {
         if (relation == null) {
@@ -65,13 +62,11 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
 
     private void saveTableLexeme() {
         if (currRelation.equals(RELATION_LESS) || currRelation.equals(RELATION_EQUALITY)) {
-            lexemesStack.push(tables.get(), currRelation);
+            lexemesStack.push(inputTerminals.peek(), currRelation);
 
         } else if (currRelation.equals(RELATION_MORE)) {
-            List<String> rightPart = lexemesStack.popLastRightPart();
-            Collections.reverse(rightPart);
-            NonTerminal nonTerminal = getNonTerminal(rightPart);
-            checkAxiom(nonTerminal);
+            NonTerminal nonTerminal = getNextNonTerminal();
+            checkVisibilityBlocks(nonTerminal);
             lexemesStack.push(
                     nonTerminal.getName()
                     , getRelation(lexemesStack.getLastLexemeName(), nonTerminal.getName())
@@ -80,7 +75,12 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
         }
     }
 
+    private void checkVisibilityBlocks(){
+
+    }
+
     private void checkAxiom(NonTerminal nonTerminal) {
+        nonTerminal.nextBlock(lexemesStack.peek(),tables.get().lexeme(),currVisBlocks.pop());
         boolean isAxiom = nonTerminal.isAxiom();
         boolean isCurrAxiom = nonTerminal.isAxiomOf(currVisBlocks.getCurrentBlock());
         if (isAxiom) {
@@ -95,29 +95,20 @@ public class SyntaxAnalyzer implements Characters, MetaLanguage {
         }
     }
 
-    private NonTerminal getNonTerminal(List<String> rightPart) {
-        NonTerminal nonTerminal = null;
+    private NonTerminal getNextNonTerminal() {
+        List<NonTerminal> nonTerminals = new ArrayList<>();
+        List<Terminal> rightPart = lexemesStack.popLastRightPart();
         Stack<VisibilityBlock> currBlocks = currVisBlocks.getBlocks();
-        while (nonTerminal == null) {
-            System.out.println(currVisBlocks.getBlocks());
+        while (nonTerminals.isEmpty()) {
             if (!currBlocks.empty()) {
-                //TODO think about refactor grammar class
-                // and add both to one method getNonTerminal
-                System.out.println("+");
-                nonTerminal = grammar.getBlockNonTerminals(rightPart, currBlocks.pop());
+                nonTerminals = grammar.getBlockNonTerminals(rightPart,currBlocks.pop());
             } else {
-
-                System.out.println("-");
-                nonTerminal = grammar.getNonTerInComplexBlock(rightPart,"").get(0);
+                throw new RuntimeException("Uncorrect grammar NonTerminal notfound for right part: "+rightPart.toString());
             }
         }
-        checkNonTerminal(nonTerminal, rightPart);
-        return nonTerminal;
-    }
-
-    private void checkNonTerminal(NonTerminal nonTerminal, List<String> rightPart) {
-        if (nonTerminal == null)
-            throw new RuntimeException(
-                    "NonTerminal not found in grammar for right part: " + rightPart.toString());
+        if(nonTerminals.size()>1){
+            throw  new RuntimeException("Uncorrect grammar right part:"+rightPart.toString()+" has more than 1 NT: "+nonTerminals.toString())
+        }
+        return nonTerminals.get(0);
     }
 }

@@ -12,8 +12,8 @@ public class TerminalsTable {
     public TerminalsTable(TablesManager tables){
         terminalsTable = new ArrayList<>();
         while(tables.hasNext()){
-            terminalsTable.add(new Terminal(tables.get().name()));
             tables.goNext();
+            terminalsTable.add(new Terminal(tables.get().lexeme()));
         }
     }
 
@@ -23,5 +23,9 @@ public class TerminalsTable {
 
     public Terminal pop(){
         return terminalsTable.remove(0);
+    }
+
+    public boolean isEmpty() {
+        return terminalsTable.isEmpty();
     }
 }

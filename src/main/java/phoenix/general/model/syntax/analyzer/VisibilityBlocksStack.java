@@ -1,12 +1,8 @@
 package phoenix.general.model.syntax.analyzer;
 
-import phoenix.general.model.entities.Grammar;
-import phoenix.general.model.entities.NonTerminal;
+import phoenix.general.model.grammar.Grammar;
 import phoenix.general.model.entities.VisibilityBlock;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Stack;
 
 public class VisibilityBlocksStack {
@@ -29,22 +25,13 @@ public class VisibilityBlocksStack {
         return blocks;
     }
 
-    public void push(NonTerminal nonTerminal) {
-        boolean isTermAxiom = nonTerminal.isAxiomOf(visibilityBlocks.peek());
-        boolean isTermInNewBlock =!nonTerminal.getCurrBlock().equals(visibilityBlocks.peek());
-        if (isTermAxiom) {
-            visibilityBlocks.pop();
-        }
-        else if(isTermInNewBlock){
-            visibilityBlocks.push(nonTerminal.getCurrBlock());
-        }
-    }
-
-    public void push(String block){
+    public void push(VisibilityBlock block){
         visibilityBlocks.push(block);
     }
 
-    public String pop() {
+    public VisibilityBlock peek(){ return visibilityBlocks.peek();}
+
+    public VisibilityBlock pop() {
         return visibilityBlocks.pop();
     }
 

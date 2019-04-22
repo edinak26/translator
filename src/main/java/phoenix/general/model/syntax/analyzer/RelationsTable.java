@@ -1,10 +1,8 @@
 package phoenix.general.model.syntax.analyzer;
 
 import phoenix.accessory.constant.Characters;
-import phoenix.general.model.entities.Grammar;
-import phoenix.general.model.entities.GrammarConstructor;
+import phoenix.general.model.grammar.Grammar;
 import phoenix.general.model.entities.Terminal;
-import phoenix.general.model.reader.TextReader;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -18,11 +16,8 @@ public class RelationsTable implements Characters {
 
     private static final String STRAT_GRAM_PATH = "D:\\University\\Java\\translator\\src\\main\\java\\phoenix\\accessory\\info\\stratGram";
 
-    public RelationsTable() throws Exception {
-        this.grammar = GrammarConstructor.construct(TextReader
-                .grammar()
-                .setPath(STRAT_GRAM_PATH)
-                .get());
+    public RelationsTable(Grammar grammar) throws Exception {
+        this.grammar = grammar;
 
         this.uniqueTerminals = grammar.getUniqueTerminals();
         relations = new String[uniqueTerminals.size() + 1][uniqueTerminals.size() + 1];
@@ -44,7 +39,7 @@ public class RelationsTable implements Characters {
             log.log(Level.INFO,
                     "Rewrite( " + ter1 + " | " + ter2 + " ) from " + relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter2.getName())] + " to =");
         }
-        relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter1.getName())] = RELATION_EQUALITY;
+        relations[uniqueTerminals.indexOf(ter1.getName())][uniqueTerminals.indexOf(ter2.getName())] = RELATION_EQUALITY;
     }
 
     private void setMoreRel(Terminal ter1, Terminal ter2) {

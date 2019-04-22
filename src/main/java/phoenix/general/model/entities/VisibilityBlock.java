@@ -31,6 +31,14 @@ public class VisibilityBlock {
         return children != null;
     }
 
+    public void showChildren(){
+        System.out.println(children.toString());
+    }
+
+    public boolean has(VisibilityBlock block){
+        return this.equals(block)||children.stream().anyMatch(child->child.has(block));
+    }
+
     public void axiom(NonTerminal nonTerminal) {
         if (hasAxiom()) {
             throw new RuntimeException("Exception: visibility block already has axiom");
@@ -39,7 +47,7 @@ public class VisibilityBlock {
     }
 
     public boolean hasAxiom() {
-        return axiom == null;
+        return axiom != null;
     }
 
     public NonTerminal getAxiom(){
@@ -54,5 +62,14 @@ public class VisibilityBlock {
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public boolean equals(VisibilityBlock block) {
+        return name.equals(block.name);
     }
 }

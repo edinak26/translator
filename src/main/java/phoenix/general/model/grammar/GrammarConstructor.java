@@ -1,10 +1,12 @@
-package phoenix.general.model.entities;
+package phoenix.general.model.grammar;
 
 import phoenix.general.interfaces.Patterns;
+import phoenix.general.model.entities.NonTerminal;
+import phoenix.general.model.entities.Terminal;
+import phoenix.general.model.entities.VisibilityBlock;
 
 import java.util.*;
 import java.util.regex.Matcher;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class GrammarConstructor implements Patterns {
@@ -12,6 +14,7 @@ public class GrammarConstructor implements Patterns {
     private Map<NonTerminal, List<List<Terminal>>> grammar;
     private List<List<String>> splitText;
     private Stack<VisibilityBlock> visibilityBlocks;
+    private NonTerminal grammarAxiom;
 
     private GrammarConstructor(List<List<String>> splitText) {
         grammar = new LinkedHashMap<>();
@@ -56,38 +59,44 @@ public class GrammarConstructor implements Patterns {
     private void convertTerminals() {
         Set<NonTerminal> nonTerminals = new LinkedHashSet<>(grammar.keySet());
         for (NonTerminal nonTerminal : nonTerminals) {
-                List<List<Terminal>> convertRightPart = grammar.get(nonTerminal).stream()
-                        .map(rightPart -> rightPart.stream()
-                                .map(terminal ->
-                                        isNonTerminal(terminal) ? createNonTerminal(terminal) : terminal)
-                                .collect(Collectors.toList()))
-                        .collect(Collectors.toList());
-                grammar.replace(nonTerminal, convertRightPart);
+            List<List<Terminal>> convertRightPart = grammar.get(nonTerminal).stream()
+                    .map(rightPart -> rightPart.stream()
+                            .map(terminal ->
+                                    isNonTerminal(terminal) ? createNonTerminal(terminal) : terminal)
+                            .collect(Collectors.toList()))
+                    .collect(Collectors.toList());
+            grammar.replace(nonTerminal, convertRightPart);
         }
     }
 
-    private void convertAxioms(){
+    private void convertAxioms() {
+        resultGrammar.setAxiom(grammarAxiom);
         grammar.keySet().forEach(nonTerminal -> {
-            if(isAxiom(nonTerminal)){
+            if (isAxiom(nonTerminal)) {
                 convertAxiom(nonTerminal);
             }
         });
+
     }
 
     private boolean isNonTerminal(Terminal terminal) {
         return resultGrammar.getAllNonTerminals().stream()
-                .anyMatch(nonTerminal -> nonTerminal.equals(terminal));
+                .anyMatch(nonTerminal -> nonTerminal.getName().equals(terminal.getName()));
     }
 
     private void addRule(List<String> line) {
-        NonTerminal nonTerminal = createNonTerminal(line.remove(0));
-        List<List<Terminal>> rightPart = convertRightPart(line);
+        List<String> rule = new ArrayList<>(line);
+        NonTerminal nonTerminal = createNonTerminal(rule.remove(0));
+        List<List<Terminal>> rightPart = convertRightPart(rule);
+        if (grammar.isEmpty()) {
+            grammarAxiom = nonTerminal;
+        }
         grammar.put(nonTerminal, rightPart);
         checkVisibilityBlockAxiom(nonTerminal);
     }
 
-    private void checkVisibilityBlockAxiom (NonTerminal nonTerminal){
-        if(!visibilityBlocks.peek().hasAxiom()){
+    private void checkVisibilityBlockAxiom(NonTerminal nonTerminal) {
+        if (!visibilityBlocks.peek().hasAxiom()) {
             visibilityBlocks.peek().axiom(nonTerminal);
         }
     }
@@ -96,18 +105,16 @@ public class GrammarConstructor implements Patterns {
         return new NonTerminal(name, visibilityBlocks);
     }
 
-    private boolean isAxiom(NonTerminal nonTerminal){
-        return visibilityBlocks.stream()
-                .anyMatch(block->block.getAxiom().equals(nonTerminal));
-    }
+    private boolean isAxiom(NonTerminal nonTerminal) { return nonTerminal.getBlock().getAxiom().equals(nonTerminal); }
 
-    private NonTerminal createNonTerminal(Terminal terminal){
+    private NonTerminal createNonTerminal(Terminal terminal) {
         return resultGrammar.getAllNonTerminals().stream()
                 .filter(nonTerminal -> nonTerminal.equals(terminal))
                 .findAny().orElse(null);
     }
 
     private void convertAxiom(NonTerminal nonTerminal) {
+        nonTerminal.setAxiom();
         for (VisibilityBlock block : resultGrammar.getUniqueBlocks()) {
             Set<Terminal> after = GrammarSetsSearcher.getAfterMinus(nonTerminal, block);
             Set<Terminal> before = GrammarSetsSearcher.getBeforePlus(nonTerminal, block);
@@ -130,7 +137,8 @@ public class GrammarConstructor implements Patterns {
 
     private void addVisibilityBlock(String line) {
         VisibilityBlock block = new VisibilityBlock(line);
-        visibilityBlocks.peek().addChild(block);
+        if (!visibilityBlocks.isEmpty())
+            visibilityBlocks.peek().addChild(block);
         visibilityBlocks.push(block);
     }
 

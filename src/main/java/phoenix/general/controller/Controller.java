@@ -21,12 +21,8 @@ public class Controller {
         lexicalAnalyzer = new LexicalAnalyzer();
         lexicalAnalyzer.analyse();
         syntaxAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer.getTables());
-        try {
+
             syntaxAnalyzer.analyze();
-        }
-        catch (Exception ex){
-            System.out.println(ex.getMessage());
-        }
         //view.run();
     }
 }

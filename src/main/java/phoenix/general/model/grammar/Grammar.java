@@ -1,6 +1,9 @@
-package phoenix.general.model.entities;
+package phoenix.general.model.grammar;
 
 import phoenix.general.interfaces.MetaLanguage;
+import phoenix.general.model.entities.NonTerminal;
+import phoenix.general.model.entities.Terminal;
+import phoenix.general.model.entities.VisibilityBlock;
 import phoenix.general.model.syntax.analyzer.RelationsTable;
 
 import java.util.*;
@@ -30,25 +33,39 @@ public class Grammar implements MetaLanguage {
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
 
-    public Set<NonTerminal> getAllBlockNonTerminals(VisibilityBlock block){
+    public Map<NonTerminal, List<List<Terminal>>> getOnlyBlockRules(VisibilityBlock block) {
+        return grammar.entrySet().stream()
+                .filter(rule -> rule.getKey().getBlock().equals(block))
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+    }
+
+    public Set<NonTerminal> getAllBlockNonTerminals(VisibilityBlock block) {
         return getBlockRules(block).keySet();
     }
 
     public List<NonTerminal> getBlockNonTerminals(List<Terminal> rightPart, VisibilityBlock block) {
-        List<NonTerminal> result = getBlockRules(block).entrySet().stream()
+        return getBlockRules(block).entrySet().stream()
                 .filter(rule -> rule.getValue().stream()
-                                .anyMatch(right -> right.equals(rightPart)))
+                        .anyMatch(right -> equal(right,rightPart)))
                 .map(Entry::getKey)
                 .collect(Collectors.toList());
-        /*if (result.isEmpty()) {
-            throw new RuntimeException("Exception: non terminal not found in block " + block + " for " + rightPart);
-        }*/
-        return result;
+    }
+
+    private boolean equal(List<Terminal> l1,List<Terminal> l2){
+        if(l1.size()!=l2.size()){
+            return false;
+        }
+        for(int i =0; i<l2.size();i++){
+            if(!l1.get(i).equals(l2.get(i))){
+                return false;
+            }
+        }
+        return true;
     }
 
     public List<List<Terminal>> getRightParts(NonTerminal nonTerminal) {
         return grammar.entrySet().stream()
-                .filter(e->e.getKey().equals(nonTerminal))
+                .filter(e -> e.getKey().equals(nonTerminal))
                 .map(Entry::getValue).findFirst()
                 .orElse(null);
     }
@@ -66,12 +83,11 @@ public class Grammar implements MetaLanguage {
         for (NonTerminal nonTerminal : grammar.keySet()) {
             terminals.add(nonTerminal.getName());
         }
-
         for (List<List<Terminal>> rightParts : grammar.values()) {
             for (List<Terminal> rightPart : rightParts) {
-                for(Terminal terminal: rightPart)
-                terminals.add(terminal.getName());
-
+                for (Terminal terminal : rightPart) {
+                    terminals.add(terminal.getName());
+                }
             }
         }
 
@@ -97,7 +113,7 @@ public class Grammar implements MetaLanguage {
         }
     }
 
-    public Set<NonTerminal> getAllNonTerminals(){
+    public Set<NonTerminal> getAllNonTerminals() {
         return grammar.keySet();
     }
 
@@ -119,16 +135,18 @@ public class Grammar implements MetaLanguage {
     }
 
     public Set<NonTerminal> getNonTermsByEnd(Terminal terminal, VisibilityBlock block) {
-        return getBlockNonTerminals(Collections.singletonList(terminal),block).stream()
-                .filter(nonTerminal -> grammar.get(nonTerminal).stream()
+        return getBlockRules(block).entrySet().stream()
+                .filter(e->e.getValue().stream()
                         .anyMatch(rightPart->rightPart.get(rightPart.size()-1).equals(terminal)))
+                .map(Entry::getKey)
                 .collect(Collectors.toSet());
     }
 
     public Set<NonTerminal> getNonTermsByStart(Terminal terminal, VisibilityBlock block) {
-        return getBlockNonTerminals(Collections.singletonList(terminal),block).stream()
-                .filter(nonTerminal -> grammar.get(nonTerminal).stream()
+        return getBlockRules(block).entrySet().stream()
+                .filter(e->e.getValue().stream()
                         .anyMatch(rightPart->rightPart.get(0).equals(terminal)))
+                .map(Entry::getKey)
                 .collect(Collectors.toSet());
     }
 
@@ -136,5 +154,19 @@ public class Grammar implements MetaLanguage {
         return grammar.keySet().stream()
                 .map(NonTerminal::getBlock)
                 .collect(Collectors.toSet());
+    }
+
+    public void show() {
+        grammar.forEach((key, value) -> {
+            System.out.print(key.getName() + "::=");
+            value.forEach(rp -> System.out.print(rp.toString()));
+            System.out.println();
+        });
+    }
+
+    public boolean hasBlockTerminal(Terminal terminal, VisibilityBlock block){
+        return getBlockRules(block).values().stream()
+                .anyMatch(rightParts->rightParts.stream()
+                        .anyMatch(rightPart->rightPart.contains(terminal)));
     }
 }

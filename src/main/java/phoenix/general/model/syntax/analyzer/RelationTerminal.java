@@ -37,4 +37,8 @@ public class RelationTerminal implements SyntaxConstants {
             throw new RuntimeException("You cannot use undefined relation");
     }
 
+    @Override
+    public String toString() {
+        return terminal.toString();
+    }
 }

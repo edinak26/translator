@@ -25,7 +25,7 @@ public class RelationTerminalsStack implements Characters {
         terminals.push(new RelationTerminal(terminal, relation));
     }
 
-    private List<Terminal> popLastRightPart() {
+    public List<Terminal> popLastRightPart() {
         List<Terminal> rightPart = new ArrayList<>();
         while(!terminals.isEmpty()){
             RelationTerminal relationTerminal = terminals.pop();
@@ -38,7 +38,8 @@ public class RelationTerminalsStack implements Characters {
         throw new RuntimeException("Relation lexeme exception: Uncorrect grammar");
     }
 
-    public String getLastName(){
-        return peek().getName();
+    @Override
+    public String toString() {
+        return terminals.toString();
     }
 }

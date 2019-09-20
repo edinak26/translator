@@ -7,19 +7,27 @@ import java.util.Stack;
 
 public class VisibilityBlocksStack {
     private Stack<VisibilityBlock> visibilityBlocks;
+    private VisibilityBlock global;
 
     VisibilityBlocksStack(VisibilityBlock global) {
         visibilityBlocks = new Stack<>();
         visibilityBlocks.push(global);
+        this.global = global;
     }
 
-    public void push(VisibilityBlock block){
+    public void push(VisibilityBlock block) {
         visibilityBlocks.push(block);
     }
 
-    public VisibilityBlock peek(){ return visibilityBlocks.peek();}
+    public VisibilityBlock peek() {
+        if (visibilityBlocks.isEmpty())
+            return global;
+        return visibilityBlocks.peek();
+    }
 
     public VisibilityBlock pop() {
+        if (visibilityBlocks.isEmpty())
+            return global;
         return visibilityBlocks.pop();
     }
 

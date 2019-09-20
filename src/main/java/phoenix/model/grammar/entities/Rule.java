@@ -1,5 +1,6 @@
 package phoenix.model.grammar.entities;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,11 +43,22 @@ public class Rule {
         return after;
     }
 
-    public Set<Terminal> getAfterMinus(Terminal terminal, Terminal before, Rules rules){
+    /*public Set<Terminal> getAfterMinus(Terminal terminal, Terminal before, Rules rules){
         Set<Terminal> after = new HashSet<>();
         replaces.forEach(replace ->after.add(replace.getAfterMinus(terminal,before, rules)));
         after.remove(null);
         return after;
+    }*/
+
+    public List<WideTerminal> getWideTerminals(Terminal terminal){
+        List<WideTerminal> result = new ArrayList<>();
+        for(Replace replace:replaces){
+            List<WideTerminal> replaceTerminals = replace.getWideTerminals(terminal);
+            replaceTerminals.forEach(t->t.setNonTerminal(nonTerminal));
+            result.addAll(replaceTerminals);
+        }
+
+        return result;
     }
 
     public Set<Terminal> getBefore(Terminal terminal){

@@ -41,10 +41,30 @@ public class Rules {
         return after;
     }
 
-    public Set<Terminal> getAfterMinus(Terminal terminal, Terminal before){
+    /*public Set<Terminal> getAfterMinus(Terminal terminal, Terminal before){
         Set<Terminal> after = new HashSet<>();
+        for(Rule rule:rules){
+            for(Replace replace: rule.getReplaces()){
+                for(Terminal replaceTerminal: replace.getTerminals()){
+                    if(replaceTerminal.equals(terminal)){
+                        if(before!=null&&replace.get(replace.indexOf(replaceTerminal)-1)==null){
+                            if(get)
+                            replace.get(replace.indexOf(replaceTerminal)+1);
+                        }
+                    }
+                }
+            }
+        }
         rules.forEach(rule -> after.addAll(rule.getAfterMinus(terminal,before, this)));
         return after;
+    }*/
+
+    public List<WideTerminal> getWideTerminals(Terminal terminal){
+        List<WideTerminal> result = new ArrayList<>();
+        for(Rule rule:rules){
+            result.addAll(rule.getWideTerminals(terminal));
+        }
+        return result;
     }
 
     public Set<Terminal> getBefore(Terminal terminal){
@@ -107,5 +127,13 @@ public class Rules {
     @Override
     public String toString() {
         return rules.toString();
+    }
+
+    public List<WideTerminal> getWideTerminals(Terminal terminal, Terminal before) {
+        return getWideTerminals(terminal).stream()
+                .filter(
+                        t-> t.getBefore().equals(before)
+                )
+                .collect(Collectors.toList());
     }
 }

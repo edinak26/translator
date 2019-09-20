@@ -10,6 +10,6 @@ public class RegexGrammarDivider extends Divider implements MetaLanguage {
         splitRegex = SELECTOR;
         regexSeparators = new String[][]{{GRAMMAR_ASSIGNMENT,SELECTOR}};
         startLine=":regex:";
-        stopLine=null;
+        stopLine=":rpn:";
     }
 }

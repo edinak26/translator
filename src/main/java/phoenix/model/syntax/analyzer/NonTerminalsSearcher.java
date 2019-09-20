@@ -25,12 +25,12 @@ public class NonTerminalsSearcher {
 
     private List<NonTerminal> search(){
         findBlockNonTerminal(block);
-        if(isFound())
-            return result;
+        //if(isFound())
+            //return result;
         findChildrenNonTerminals(block);
-        if(isFound()){
-            return result;
-        }
+        //if(isFound()){
+            //return result;
+        //}
         findParentNonTerminals(block);
         if(isFound()){
             return result;

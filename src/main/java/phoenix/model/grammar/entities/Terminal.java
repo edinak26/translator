@@ -19,9 +19,16 @@ public class Terminal {
         return name;
     }
 
+    public boolean isAxiom(){
+        if(this instanceof NonTerminal){
+            return ((NonTerminal) this).getBlock().isAxiom((NonTerminal)this);
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
-        return name;
+        return name;//+"\\"+(this instanceof NonTerminal);
     }
 
     @Override

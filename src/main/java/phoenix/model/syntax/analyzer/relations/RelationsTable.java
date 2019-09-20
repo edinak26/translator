@@ -49,8 +49,15 @@ public class RelationsTable {
                 for(int i = 0; i < replace.size() - 1; i++){
                     Terminal currTerminal = replace.get(i);
                     Terminal nextTerminal = replace.get(i + 1);
+
                     Set<Terminal> curLast = SetsSearcher.getLastPlus(rules,currTerminal);
                     Set<Terminal> nextFirst = SetsSearcher.getFirstPlus(rules,nextTerminal);
+
+
+                    //System.out.println("C: "+currTerminal);
+                    //System.out.println("N: "+nextTerminal);
+                    //System.out.println("CL: "+ curLast);
+                    //System.out.println("NF: "+nextFirst);
 
                     setEqualRel(currTerminal, nextTerminal);
                     setMoreRel(curLast, nextTerminal);

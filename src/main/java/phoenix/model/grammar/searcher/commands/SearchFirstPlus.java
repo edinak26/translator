@@ -19,6 +19,7 @@ public class SearchFirstPlus extends SearchCommand{
 
     @Override
     public Set<Terminal> search(Terminal terminal) {
+        //System.out.println(terminal+"|"+(terminal instanceof NonTerminal));
         if (!(terminal instanceof NonTerminal))
             return new HashSet<>();
         collectFirstPlus((NonTerminal) terminal);
@@ -44,6 +45,9 @@ public class SearchFirstPlus extends SearchCommand{
     }
 
     private Set<Terminal> getFirst(NonTerminal nonTerminal) {
+        if(rules.getReplaces(nonTerminal)==null){
+            return new HashSet<>();
+        }
         return rules.getReplaces(nonTerminal).stream()
                 .filter(Objects::nonNull)
                 .map(Replace::getFirst)

@@ -19,10 +19,12 @@ public class SearchLastPlus extends SearchCommand{
 
     @Override
     public Set<Terminal> search(Terminal terminal) {
+        //System.out.println("search: "+terminal);
         if (!(terminal instanceof NonTerminal))
             return new HashSet<>();
         collectLastPlus((NonTerminal) terminal);
         collected.remove(terminal);
+        //System.out.println("Result: "+collected);
         return collected;
     }
 
@@ -35,6 +37,7 @@ public class SearchLastPlus extends SearchCommand{
 
     private void lastPlus(NonTerminal nonTerminal) {
         for (Terminal lastTerminal : getLast(nonTerminal)) {
+            //System.out.println(lastTerminal+" "+(lastTerminal instanceof NonTerminal));
             if (lastTerminal instanceof NonTerminal)
                 collectLastPlus((NonTerminal) lastTerminal);
             else
@@ -44,6 +47,15 @@ public class SearchLastPlus extends SearchCommand{
     }
 
     private Set<Terminal> getLast(NonTerminal nonTerminal) {
+        if(rules.getReplaces(nonTerminal)==null){
+            return new HashSet<>();
+        }
+//        if(rules.getReplaces(nonTerminal)==null){
+//            return nonTerminal.getBlock().getRules().getReplaces(nonTerminal)
+//                    .stream().filter(Objects::nonNull)
+//                    .map(Replace::getLast)
+//                    .collect(Collectors.toSet());
+//        }
         return rules.getReplaces(nonTerminal).stream()
                 .filter(Objects::nonNull)
                 .map(Replace::getLast)

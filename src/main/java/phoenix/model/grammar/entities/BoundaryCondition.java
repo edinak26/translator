@@ -1,16 +1,14 @@
 package phoenix.model.grammar.entities;
 
+import phoenix.model.grammar.boundary.BoundaryConditionConstructor;
 import phoenix.model.grammar.searcher.SetsSearcher;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static phoenix.interfaces.Characters.END_TERMINAL;
 
 public class BoundaryCondition {
-    private List<LocalBoundaryCondition> localConditions = new ArrayList<>();
+    private Set<LocalBoundaryCondition> localConditions = new HashSet<>();
 
     public BoundaryCondition(NonTerminal nonTerminal, Rules rules) {
         createConditions(nonTerminal, rules);
@@ -23,24 +21,33 @@ public class BoundaryCondition {
         }
     }
 
-    public BoundaryCondition(List<LocalBoundaryCondition> localConditions) {
-        this.localConditions = new ArrayList<>(localConditions);
+    public BoundaryCondition(Set<LocalBoundaryCondition> localConditions) {
+        this.localConditions = new HashSet<>(localConditions);
     }
 
     public void createConditions(NonTerminal nonTerminal, Rules rules) {
-        Set<Terminal> before = SetsSearcher.getBeforePlus(rules, nonTerminal);
+        //System.out.println("help meeee" + nonTerminal+"|"+rules);
+        BoundaryConditionConstructor conditionConstructor = new BoundaryConditionConstructor(nonTerminal,rules);
+        conditionConstructor.isFirst=true;
+        localConditions = conditionConstructor.construct();
+        //System.out.println("yep? again"+localConditions);
+        localConditions.forEach(LocalBoundaryCondition::expand);
+        System.out.println("for"+nonTerminal+" Result:"+localConditions);
+        /*Set<Terminal> before = SetsSearcher.getBeforePlus(rules, nonTerminal);
         for (Terminal beforeTerminal : before) {
             System.out.println(beforeTerminal);
             Set<Terminal> afterTerminals = SetsSearcher.getAfterMinus(beforeTerminal, rules, nonTerminal);
             System.out.println(afterTerminals);
             addCondition(new LocalBoundaryCondition(beforeTerminal, afterTerminals));
-        }
+        }*/
     }
 
     public void addCondition(LocalBoundaryCondition newCondition) {
-        if (!addSame(newCondition)) {
+        //System.out.println("ERROR PLACE" + localConditions+"NEW" + newCondition);
+        //if (!addSame(newCondition)) {
             localConditions.add(newCondition);
-        }
+        //}
+        //System.out.println("END"+ localConditions);
     }
 
     public boolean addSame(LocalBoundaryCondition newCondition) {
@@ -70,16 +77,18 @@ public class BoundaryCondition {
     }
 
     public BoundaryCondition join(BoundaryCondition usageCondition) {
+        //System.out.println("START"+localConditions);
         BoundaryCondition result = new BoundaryCondition(localConditions);
         for (LocalBoundaryCondition condition : localConditions) {
-            if (!condition.isFinished()) {
+            if (!condition.isFinished()&&usageCondition.localConditions.size()>0) {
                 result.removeCondition(condition);
                 for (LocalBoundaryCondition localUsageCondition : usageCondition.localConditions) {
-                    result.addCondition(condition.innerJoin(localUsageCondition));
+                    result.addCondition(condition.join(localUsageCondition));
                 }
             }
 
         }
+        //System.out.println("END"+result);
         return result;
     }
 
@@ -94,5 +103,18 @@ public class BoundaryCondition {
     @Override
     public String toString() {
         return localConditions.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BoundaryCondition condition = (BoundaryCondition) o;
+        return Objects.equals(localConditions, condition.localConditions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(localConditions);
     }
 }

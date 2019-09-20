@@ -42,6 +42,8 @@ public class TablesManager {
         index++;
     }
 
+    public void goTo(int index) { this.index=index;}
+
     public void show() {
         String text;
         for (LexemesTableElement elem : lexemesTable) {
@@ -51,7 +53,42 @@ public class TablesManager {
         }
     }
 
+    public List<String> getIdentifiers(){
+        List<String> result = new ArrayList<>();
+        for(LexemesTableElement elem: lexemesTable){
+            if("IDN".equals(elem.specType)){
+                result.add(elem.name);
+            }
+        }
+        return result;
+    }
+
     public void goBack() {
         index--;
+    }
+
+    public int getIndex() {
+        return index;
+
+    }
+
+    public List<String> getConstants() {
+        List<String> result = new ArrayList<>();
+        for(LexemesTableElement elem: lexemesTable){
+            if("CON".equals(elem.specType)){
+                result.add(elem.name);
+            }
+        }
+        return result;
+    }
+
+    public List<String> getPointers() {
+        List<String> result = new ArrayList<>();
+        for(LexemesTableElement elem: lexemesTable){
+            if("POINTER".equals(elem.specType)){
+                result.add(elem.name);
+            }
+        }
+        return result;
     }
 }

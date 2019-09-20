@@ -57,6 +57,7 @@ public class GrammarConstructor implements Patterns {
         Grammar grammar = new Grammar(global);
         grammar.setUniqueTerminals(uniqueTerminals);
         grammar.setRules(allRules);
+        //grammar.show();
         return grammar;
     }
 

@@ -14,6 +14,10 @@ public class NonTerminal extends Terminal implements MetaLanguage {
         this.block = blocks.peek();
     }
 
+    public NonTerminal (String name){
+        super(name);
+    }
+
     public NonTerminal(Terminal terminal, VisibilityBlock block){
         super(terminal);
         this.block = block;
@@ -67,7 +71,7 @@ public class NonTerminal extends Terminal implements MetaLanguage {
     }
 
     private VisibilityBlock getNextBlock(Terminal lastLex, Terminal nextLex) {
-        System.out.println(lastLex+" "+nextLex);
+        //System.out.println(lastLex+" "+nextLex);
         //TODO addChild block check in set search &&block.has(e.getKey())
         List<VisibilityBlock> resultAfter = sets.entrySet().stream()
                 .filter(e -> e.getValue()[0] != null)
@@ -86,8 +90,8 @@ public class NonTerminal extends Terminal implements MetaLanguage {
 
         showAfter();
         showBefore();
-        System.out.println(resultAfter);
-        System.out.println(resultBefore);
+        //System.out.println(resultAfter);
+        //System.out.println(resultBefore);
         resultAfter.retainAll(resultBefore);
         if (resultAfter.size() == 1) {
             return resultAfter.get(0);
@@ -112,7 +116,7 @@ public class NonTerminal extends Terminal implements MetaLanguage {
                                 .anyMatch(Objects::isNull)?getWideAfter(e).stream():e.getValue()[0].stream()
                         )
                 .collect(Collectors.toSet());
-        System.out.println("RRRRRR"+wideAfter);
+        //System.out.println("RRRRRR"+wideAfter);
         return null;
     }
 

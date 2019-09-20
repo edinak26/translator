@@ -3,6 +3,7 @@ package phoenix.model.grammar.searcher.commands;
 import phoenix.model.grammar.entities.NonTerminal;
 import phoenix.model.grammar.entities.Rules;
 import phoenix.model.grammar.entities.Terminal;
+import phoenix.model.grammar.entities.WideTerminal;
 import phoenix.model.grammar.searcher.SetsSearcher;
 
 import java.util.Set;
@@ -29,11 +30,23 @@ public class SearchAfterMinus extends SearchCommand {
         return collected;
     }
 
-    private void afterFirst(Terminal terminal) {
-        for (Terminal afterTerminal : rules.getAfterMinus(terminal, before)) {
-            collected.add(afterTerminal);
-            if (afterTerminal instanceof NonTerminal) {
-                collected.addAll(SetsSearcher.getFirstPlus(rules, afterTerminal));
+    private void afterFirst (Terminal terminal) {
+        for (WideTerminal wideTerminal : rules.getWideTerminals(terminal)) {
+            Terminal before = wideTerminal.getBefore();
+            if(before==null){
+
+            }else if(wideTerminal.getBefore().equals(before))
+
+
+            if(terminal.isAxiom()){
+                collected.add(wideTerminal.getAfter());
+            }
+            else if(wideTerminal.getBefore().equals(before)){
+                if(wideTerminal.getAfter()==null){
+
+                }
+
+                //collected.add(wideTerminal.getAfter());
             }
         }
     }

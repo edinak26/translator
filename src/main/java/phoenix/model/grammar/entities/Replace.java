@@ -1,5 +1,6 @@
 package phoenix.model.grammar.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Replace {
@@ -30,6 +31,8 @@ public class Replace {
     }
 
     public Terminal get(int index) {
+        if(index<0||index>=getSize())
+            return null;
         return replace.get(index);
     }
 
@@ -62,7 +65,7 @@ public class Replace {
         return null;
     }
 
-    public Terminal getAfterMinus(Terminal terminal, Terminal before, Rules rules) {
+    /*public Terminal getAfterMinus(Terminal terminal, Terminal before, Rules rules) {
         int index = replace.indexOf(terminal);
         boolean hasAfter = index >= 0 && index < replace.size() - 1;
         if (!hasAfter)
@@ -92,6 +95,32 @@ public class Replace {
             }
         }
 
+        return null;
+    }*/
+
+    public List<WideTerminal> getWideTerminals(Terminal terminal){
+        List<WideTerminal> result = new ArrayList<>();
+        for(int i = 0; i<replace.size();i++){
+            Terminal replaceTerminal = get(i);
+            if(replaceTerminal.equals(terminal)){
+                Terminal before = getBefore(i);
+                Terminal after = getAfter(i);
+                result.add(new WideTerminal(replaceTerminal,before,after));
+            }
+        }
+        return result;
+    }
+
+    public Terminal getBefore(int index){
+        if(0<index&&index<replace.size()){
+            return get(index-1);
+        }
+        return null;
+    }
+    public Terminal getAfter(int index){
+        if(0<=index&&index<replace.size()-1){
+            return get(index+1);
+        }
         return null;
     }
 
@@ -132,13 +161,22 @@ public class Replace {
     }
 
     public void replace(Terminal terminal) {
-        replace.forEach(t -> {
+        replace.replaceAll(t -> {
+            //System.out.println(t+"|||"+terminal+t.getName().equals(terminal.getName()));
             if (t.getName().equals(terminal.getName())) {
-                int index = replace.indexOf(t);
-                replace.set(index, terminal);
+                return terminal;
             }
+            //System.out.println(replace);
+            return t;
         });
     }
 
 
+    public List<Terminal> getTerminals() {
+        return replace;
+    }
+
+    public int indexOf(Terminal replaceTerminal) {
+        return replace.indexOf(replaceTerminal);
+    }
 }

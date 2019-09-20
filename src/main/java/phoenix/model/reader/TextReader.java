@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class TextReader {
     private List<String> text;
@@ -35,6 +36,14 @@ public class TextReader {
         reader.path = DEFAULT_GRAMMAR_PATH;
         return reader;
     }
+
+    public static TextReader polishNotation(){
+        TextReader reader = new TextReader();
+        reader.divider = new PolishNotationDivider();
+        reader.path = DEFAULT_GRAMMAR_PATH;
+        return reader;
+    }
+
     public static TextReader dataTypesGrammar(){
         TextReader reader = new TextReader();
         reader.divider = new DataTypesGrammarDivider();

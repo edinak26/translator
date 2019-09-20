@@ -37,5 +37,7 @@ public class Grammar implements MetaLanguage {
     }
 
 
-
+    public void show() {
+        global.show();
+    }
 }

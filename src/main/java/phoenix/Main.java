@@ -13,6 +13,8 @@ public class Main {
         View view = new View();
         Controller controller = new Controller(model,view);
         controller.run();
+        //d 501
+        // 9 00
 
         /*class A {
             protected String name;

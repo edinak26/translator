@@ -1,11 +1,11 @@
 int a = 1==65, c=5+23
-int b =23-234/(12-4)
+int b =23+12*(5+4)
 double k=0
-{#pointer
-#pointer:
-cout >> a
+{
+
+if 10<c then {
+cout >> c
 }
+a=a+1
 
-
-
-
+}

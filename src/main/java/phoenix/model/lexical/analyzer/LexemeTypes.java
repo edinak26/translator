@@ -21,7 +21,7 @@ public class LexemeTypes {
     private boolean isType(String lex){
         if(lex.length()<3&&!lex.equals("|"))
             return true;
-        Pattern p = Pattern.compile("^[^<].+[^>]$");//TODO optimise compile
+        Pattern p = Pattern.compile("^[^<].+[^>]$");
         Matcher m = p.matcher(lex);
         return m.matches();
     }

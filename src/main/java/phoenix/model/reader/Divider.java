@@ -25,7 +25,7 @@ public abstract class Divider {
     public List<List<String>> splitText(final List<String> text) {
         splitText = new ArrayList<>();
         for (String line : text) {
-            if(!line.equals(EMPTY)) {//TODO need to optimize
+            if(!line.equals(EMPTY)) {
                 if (line.equals(stopLine))
                     return splitText;
                 if (isStarted) {
@@ -55,7 +55,7 @@ public abstract class Divider {
         }
     }
     private void selectMultiRegexSeparators(){
-        for(String[] multiRegexSeparator : multiRegexSeparators){//TODO optimise pattern
+        for(String[] multiRegexSeparator : multiRegexSeparators){
             Pattern pattern = Pattern.compile(multiRegexSeparator[0]);
             Matcher matcher = pattern.matcher(curLine);
             while(matcher.find()){

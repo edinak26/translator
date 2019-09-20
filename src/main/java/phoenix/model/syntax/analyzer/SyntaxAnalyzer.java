@@ -20,7 +20,7 @@ public class SyntaxAnalyzer implements MetaLanguage {
     private TerminalsTable inputTerminals;
     private Grammar grammar;
     private RelationsTable relationsTable;
-    private static final String STRAT_GRAM_PATH = "D:\\University\\Java\\translator\\src\\main\\resources\\stratGram";
+    private static final String STRAT_GRAM_PATH = "src/main/resources/stratGram";
     private VisibilityBlocksStack currVisBlocks;
     private Relation currRelation;
     private PolishNotationConverter converter;

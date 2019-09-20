@@ -9,7 +9,7 @@ public class NonTerminal extends Terminal implements MetaLanguage {
     private VisibilityBlock block;
     private Map<VisibilityBlock, Set<Terminal>[]> sets;
 
-    public NonTerminal(String name, Stack<VisibilityBlock> blocks) {//TODO delete this constructor
+    public NonTerminal(String name, Stack<VisibilityBlock> blocks) {
         super(name);
         this.block = blocks.peek();
     }
@@ -71,8 +71,6 @@ public class NonTerminal extends Terminal implements MetaLanguage {
     }
 
     private VisibilityBlock getNextBlock(Terminal lastLex, Terminal nextLex) {
-        //System.out.println(lastLex+" "+nextLex);
-        //TODO addChild block check in set search &&block.has(e.getKey())
         List<VisibilityBlock> resultAfter = sets.entrySet().stream()
                 .filter(e -> e.getValue()[0] != null)
                 .filter(e -> e.getValue()[0].contains(nextLex))

@@ -23,7 +23,7 @@ public class RemoveVisibilityBlockCommand extends GrammarConstructorCommand {
         constructor.popBlock();
     }
 
-    private boolean isCurrentBlockClose(String name) {//TODO optimize
+    private boolean isCurrentBlockClose(String name) {
         String currentBlockName = constructor.currentBlock().getName();
         currentBlockName = currentBlockName.replaceAll("<:", "");
         currentBlockName = currentBlockName.replaceAll(":>", "");

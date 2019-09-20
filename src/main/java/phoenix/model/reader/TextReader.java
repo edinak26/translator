@@ -13,8 +13,8 @@ public class TextReader {
     private String path;
     private Divider divider;
 
-    public static String DEFAULT_CODE_PATH = "D:\\University\\Java\\translator\\src\\main\\resources\\code";
-    public static String DEFAULT_GRAMMAR_PATH = "D:\\University\\Java\\translator\\src\\main\\resources\\grammar";
+    public static String DEFAULT_CODE_PATH = "src/main/resources/code";
+    public static String DEFAULT_GRAMMAR_PATH = "src/main/resources/grammar";
 
     public static TextReader code(){
         TextReader reader = new TextReader();

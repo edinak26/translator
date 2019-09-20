@@ -36,7 +36,7 @@ public class VisibilityBlock {
         return name;
     }
 
-    public void setAxiom(NonTerminal nonTerminal) {//TODO DELETE AXIOM METHODS
+    public void setAxiom(NonTerminal nonTerminal) {
         if (hasAxiom()) {
             throw new RuntimeException("Exception: visibility block already has axiom");
         }

@@ -102,7 +102,7 @@ public class LocalBoundaryCondition {
     }
 
     public LocalBoundaryCondition innerJoin(LocalBoundaryCondition localUsageCondition) {
-        if (!isAfterFinished() && !isBeforeFinished()) {//TODO REMOVE check
+        if (!isAfterFinished() && !isBeforeFinished()) {
             throw new RuntimeException("2 null in condition exception: " + this);
         }
         if (!isAfterFinished()) {

@@ -17,7 +17,6 @@ public interface MetaLanguage extends Regex, Characters {
                     + GRAMMAR_OR
                     + CLOSE_REGEX_CHARACTER_CLASS;
 
-    String GRAMMAR_TERMINAL_REGEX = "";//TODO addChild terminal check in future
 
     String GRAMMAR_NON_TERMINAL_GROUP_REGEX =
             OPEN_REGEX_GROUP
@@ -30,7 +29,7 @@ public interface MetaLanguage extends Regex, Characters {
     String GRAMMAR_SECTION_START = COLON;
     String GRAMMAR_SECTION_END = COLON;
 
-    String GRAMMAR_SECTION_REGEX = //TODO addChild checking of sections
+    String GRAMMAR_SECTION_REGEX =
             GRAMMAR_SECTION_START
                     + GRAMMAR_ELEMENT_NAME_REGEX
                     + REGEX_ONE_OR_MORE

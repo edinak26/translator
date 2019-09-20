@@ -1,72 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="48835b6d-ff5c-44b4-867c-eb5f59c69f38" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/description.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="48835b6d-ff5c-44b4-867c-eb5f59c69f38" name="Default Changelist" comment="Refactored Final version">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/accessory/info/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/accessory/info/app.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/controller/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/Grammar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/Grammar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/constructor/GrammarConstructor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/constructor/GrammarConstructor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/BoundaryCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/BoundaryCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/interfaces/MetaLanguage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/interfaces/MetaLanguage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/constructor/commands/RemoveVisibilityBlockCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/constructor/commands/RemoveVisibilityBlockCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/LocalBoundaryCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/LocalBoundaryCondition.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/NonTerminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/NonTerminal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/Replace.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/Replace.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/Rule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/Rule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/Rules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/Rules.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/Terminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/Terminal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/searcher/commands/SearchAfterMinus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/searcher/commands/SearchAfterMinus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/searcher/commands/SearchFirstPlus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/searcher/commands/SearchFirstPlus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/searcher/commands/SearchLastPlus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/searcher/commands/SearchLastPlus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/lexical/analyzer/TablesManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/lexical/analyzer/TablesManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/reader/RegexGrammarDivider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/reader/RegexGrammarDivider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/VisibilityBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/grammar/entities/VisibilityBlock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/lexical/analyzer/LexemeTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/lexical/analyzer/LexemeTypes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/lexical/analyzer/SpecialLexemeTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/lexical/analyzer/SpecialLexemeTypes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/reader/Divider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/reader/Divider.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/reader/TextReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/reader/TextReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/NonTerminalChooser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/NonTerminalChooser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/NonTerminalsSearcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/NonTerminalsSearcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/RelationTerminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/RelationTerminal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/RelationTerminalsStack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/RelationTerminalsStack.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/SyntaxAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/SyntaxAnalyzer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/TerminalsTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/TerminalsTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/VisibilityBlocksStack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/VisibilityBlocksStack.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/relations/RelationsTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/model/syntax/analyzer/relations/RelationsTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/view/Controller.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/phoenix/view/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/phoenix/view/View.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/code" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/code" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/stratGram" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/stratGram" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/translator.kotlin_module" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/META-INF/translator.kotlin_module" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/translator.kotlin_module" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/code" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/code" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/controller/Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/controller/Controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/Grammar.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/Grammar.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/converter/ConvertRule.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/converter/ConvertRule.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/converter/ConverterConstructor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/converter/ConverterConstructor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/converter/PolishNotationConverter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/converter/PolishNotationConverter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/executor/Executor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/executor/Executor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/boundary/BoundaryConditionConstructor$Searched.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/boundary/BoundaryConditionConstructor$Searched.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/boundary/BoundaryConditionConstructor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/boundary/BoundaryConditionConstructor.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/constructor/GrammarConstructor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/constructor/GrammarConstructor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/constructor/UsagesConstructor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/constructor/UsagesConstructor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/constructor/commands/AddRuleCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/constructor/commands/AddRuleCommand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/constructor/commands/AddVisibilityBlockCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/constructor/commands/AddVisibilityBlockCommand.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/BoundaryCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/BoundaryCondition.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/LocalBoundaryCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/LocalBoundaryCondition.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/NonTerminal.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/NonTerminal.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/Replace.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/Replace.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/Rule.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/Rule.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/Rules.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/Rules.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/Terminal.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/Terminal.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/Usages.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/Usages.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/VisibilityBlock.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/VisibilityBlock.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/WideTerminal.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/entities/WideTerminal.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/searcher/commands/SearchAfterMinus.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/searcher/commands/SearchAfterMinus.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/searcher/commands/SearchAfterPlus.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/searcher/commands/SearchAfterPlus.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/searcher/commands/SearchBeforePlus.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/searcher/commands/SearchBeforePlus.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/searcher/commands/SearchFirstPlus.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/searcher/commands/SearchFirstPlus.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/searcher/commands/SearchLastPlus.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/grammar/searcher/commands/SearchLastPlus.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/lexical/analyzer/LexemeTypes.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/lexical/analyzer/LexemeTypes.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/lexical/analyzer/SpecialLexemeTypes.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/lexical/analyzer/SpecialLexemeTypes.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/lexical/analyzer/TablesManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/lexical/analyzer/TablesManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/reader/RegexGrammarDivider.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/reader/RegexGrammarDivider.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/reader/Divider.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/reader/Divider.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/reader/TextReader.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/reader/TextReader.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/Messages.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/Messages.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/NonTerminalChooser.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/NonTerminalChooser.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/NonTerminalsSearcher.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/NonTerminalsSearcher.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/RelationTerminal.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/RelationTerminal.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/RelationTerminalsStack.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/RelationTerminalsStack.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/SyntaxAnalyzer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/SyntaxAnalyzer.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/TerminalsTable.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/TerminalsTable.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/VisibilityBlocksStack.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/VisibilityBlocksStack.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/relations/RelationsTable.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/model/syntax/analyzer/relations/RelationsTable.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/stratGram" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/stratGram" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translator.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/phoenix/view/View.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/phoenix/view/View.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -95,6 +87,26 @@
       </list>
     </option>
   </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="phoenix.Main" />
+      <module name="translator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="phoenix.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -106,6 +118,14 @@
       <option name="presentableId" value="Default" />
       <updated>1568994439660</updated>
     </task>
+    <task id="LOCAL-00001" summary="Final version">
+      <created>1568995011656</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1568995011656</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -120,6 +140,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="Final version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Final version" />
   </component>
 </project>

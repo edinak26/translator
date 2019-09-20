@@ -13,7 +13,7 @@ public class SpecialLexemeTypes {
 
     public String getType(String lex){
         for(List<String> type : specTypes){
-            Pattern p = Pattern.compile(type.get(1));//TODO optimise compile
+            Pattern p = Pattern.compile(type.get(1));
             Matcher m = p.matcher(lex);
             if(m.matches())
                 return type.get(0);
